@@ -1,0 +1,70 @@
+/* Mijnstroom legacy stylesheet -- HTML 4.01 / CSS 2.1 only.
+ * Approximates Google Play Music 2014 (Material v1) using only solid
+ * colour blocks and basic borders. No flexbox, no transitions, no
+ * shadows, no gradients.
+ */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FAFAFA;
+    color: #212121;
+    margin: 0;
+    padding: 0;
+}
+
+a { color: #FF5722; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1, h2, h3 { color: #212121; margin-top: 1em; margin-bottom: 0.5em; }
+
+code {
+    background-color: #EEEEEE;
+    padding: 2px 4px;
+    border: 1px solid #DDDDDD;
+}
+
+.topbar {
+    background-color: #FF5722;
+    color: #FFFFFF;
+    padding: 12px 16px;
+    border-bottom: 2px solid #E64A19;
+}
+.topbar a, .topbar a:hover { color: #FFFFFF; }
+
+.container { padding: 16px; }
+
+table.list {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+}
+table.list th, table.list td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #EEEEEE;
+    text-align: left;
+    vertical-align: middle;
+}
+table.list th { background-color: #F5F5F5; }
+
+input[type=text], input[type=password], input[type=number], textarea, select {
+    border: 1px solid #BDBDBD;
+    padding: 4px 6px;
+    background-color: #FFFFFF;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+input[type=submit], button {
+    background-color: #FF5722;
+    color: #FFFFFF;
+    border: 1px solid #E64A19;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-size: 1em;
+    cursor: pointer;
+}
+input[type=submit]:hover, button:hover { background-color: #E64A19; }
+
+.error { color: #B71C1C; }
+.muted { color: #757575; }
