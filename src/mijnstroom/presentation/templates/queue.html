@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% set active = 'queue' %}
+{% block title %}Queue — Mijnstroom{% endblock %}
+
+{% macro section(label, status_class, jobs, show_cancel=False, show_delete=False) %}
+<div class="mij-queue-section">
+  <h2 class="mij-queue-section-header">
+    {{ label }}<span class="mij-count">{{ jobs|length }}</span>
+  </h2>
+  {% if jobs %}
+  <div class="mij-list">
+  <table>
+  <thead><tr><th>Kind</th><th>Status</th><th>Attempts</th><th>Created</th><th>Next run</th><th>Error</th><th></th></tr></thead>
+  <tbody>
+  {% for j in jobs %}
+  <tr>
+    <td>{{ j.kind.value }}</td>
+    <td><span class="mij-status-pill {{ status_class }}">{{ j.status.value }}</span></td>
+    <td>{{ j.attempts }}</td>
+    <td>{{ j.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ j.next_run_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{% if j.error %}<span class="mij-error">{{ j.error }}</span>{% else %}-{% endif %}</td>
+    <td class="mij-actions">
+      {% if show_cancel %}
+      <form method="post" action="/queue/{{ j.id }}/cancel" style="display:inline">
+        <button class="mij-btn mij-btn-flat" type="submit">Cancel</button>
+      </form>
+      {% endif %}
+      {% if show_delete %}
+      <form method="post" action="/queue/{{ j.id }}/delete" style="display:inline">
+        <button class="mij-btn mij-btn-flat" type="submit">Delete</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="mij-muted">None.</p>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% block content %}
+<h1 class="mij-page-title">Download queue</h1>
+{{ section('Pending',   'mij-status-pending',   grouped.pending,   show_cancel=True) }}
+{{ section('Running',   'mij-status-running',   grouped.running) }}
+{{ section('Failed',    'mij-status-failed',    grouped.failed,    show_delete=True) }}
+{{ section('Cancelled', 'mij-status-cancelled', grouped.cancelled, show_delete=True) }}
+{{ section('Done',      'mij-status-done',      grouped.done,      show_delete=True) }}
+{% endblock %}

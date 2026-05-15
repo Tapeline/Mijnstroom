@@ -8,10 +8,7 @@ _PUBLIC_PREFIXES: tuple[str, ...] = ("/auth/", "/static/", "/healthz")
 
 
 def _is_public(path: str) -> bool:
-    return any(
-        path == prefix.rstrip("/") or path.startswith(prefix)
-        for prefix in _PUBLIC_PREFIXES
-    )
+    return any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in _PUBLIC_PREFIXES)
 
 
 def _parse_cookies(scope: Scope) -> dict[str, str]:
@@ -57,9 +54,7 @@ def auth_middleware(app: ASGIApp) -> ASGIApp:
         authenticated = False
         if raw:
             data = codec.decode(raw)
-            if data.sub and (
-                not oidc_config.allowed_sub or data.sub == oidc_config.allowed_sub
-            ):
+            if data.sub and (not oidc_config.allowed_sub or data.sub == oidc_config.allowed_sub):
                 authenticated = True
 
         if authenticated:

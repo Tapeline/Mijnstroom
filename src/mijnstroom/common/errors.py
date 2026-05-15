@@ -20,5 +20,3 @@ class Forbidden(AppError):  # noqa: N818
 
 class ValidationError(AppError):
     """Input fails an invariant or precondition."""
-
-

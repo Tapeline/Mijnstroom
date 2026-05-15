@@ -1,0 +1,89 @@
+{% extends "_base.html" %}
+{% set active = 'playlists' %}
+{% block title %}{{ playlist.name }} — Mijnstroom{% endblock %}
+
+{% block extra_js %}
+<script id="mij-queue-data" type="application/json">[
+{% for t in tracks %}
+{"url":"/track/{{ t.id }}/stream","title":"{{ t.title|e }}","artist":"{{ t.artist|e }}","cover":"{% if t.has_cover %}/track/{{ t.id }}/cover{% endif %}"}{% if not loop.last %},{% endif %}
+{% endfor %}
+]</script>
+{% endblock %}
+
+{% block content %}
+<div class="mij-track-hero">
+  <div class="mij-track-hero-cover">
+    <span class="mij-card-cover-letter" style="font-size:80px; padding-top:30%">{{ (playlist.name[:1] or '?')|upper }}</span>
+  </div>
+  <div class="mij-track-hero-info">
+    <p class="mij-track-hero-eyebrow">Playlist</p>
+    <h1 class="mij-track-hero-title">{{ playlist.name }}</h1>
+    <p class="mij-track-hero-subtitle">{{ tracks|length }} track{% if tracks|length != 1 %}s{% endif %}</p>
+    {% if tracks %}
+    <button class="mij-btn mij-btn-primary" id="mij-play-all" type="button">Play all</button>
+    {% endif %}
+  </div>
+</div>
+
+{% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
+
+<form class="mij-form" method="post" action="/playlists/{{ playlist.id }}/rename" style="max-width:520px">
+  <div class="mij-form-row">
+    <label>Rename</label>
+    <input type="text" name="name" value="{{ playlist.name }}">
+  </div>
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">Save</button>
+  </div>
+</form>
+
+<h2 class="mij-section-title">Tracks</h2>
+{% if tracks %}
+<div class="mij-list">
+<table>
+<thead><tr><th>#</th><th>Title</th><th>Artist</th><th>Album</th><th></th></tr></thead>
+<tbody>
+{% for t in tracks %}
+<tr>
+<td class="mij-muted">{{ loop.index }}</td>
+<td><a href="/track/{{ t.id }}">{{ t.title }}</a></td>
+<td>{{ t.artist or '-' }}</td>
+<td>{{ t.album or '-' }}</td>
+<td class="mij-actions">
+<a class="mij-btn mij-btn-flat mij-play"
+   href="/track/{{ t.id }}/stream"
+   data-stream-url="/track/{{ t.id }}/stream"
+   data-title="{{ t.title|e }}"
+   data-artist="{{ t.artist|e }}"
+   data-queue-index="{{ loop.index0 }}"
+   {% if t.has_cover %}data-cover="/track/{{ t.id }}/cover"{% endif %}
+   title="Play">&#9654;</a>
+<form method="post" action="/playlists/{{ playlist.id }}/remove" style="display:inline">
+<input type="hidden" name="track_id" value="{{ t.id }}">
+<button class="mij-btn mij-btn-flat" type="submit">Remove</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<p class="mij-muted">This playlist is empty.</p>
+{% endif %}
+
+<h2 class="mij-section-title">Add a track</h2>
+<form class="mij-form" method="post" action="/playlists/{{ playlist.id }}/add" style="max-width:520px">
+  <div class="mij-form-row">
+    <label>Track</label>
+    <select name="track_id">
+      {% for t in all_tracks %}
+      <option value="{{ t.id }}">{{ t.title }}{% if t.artist %} — {{ t.artist }}{% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">Add</button>
+  </div>
+</form>
+{% endblock %}

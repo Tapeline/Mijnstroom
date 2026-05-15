@@ -4,7 +4,9 @@ from mijnstroom.infrastructure.auth.session import SessionCodec, SessionData
 
 def test_session_roundtrip() -> None:
     codec = SessionCodec(SessionConfig(secret="topsecret"))
-    original = SessionData(sub="user-1", pending_state="s", pending_nonce="n", pending_pkce_verifier="v")
+    original = SessionData(
+        sub="user-1", pending_state="s", pending_nonce="n", pending_pkce_verifier="v"
+    )
     encoded = codec.encode(original)
     decoded = codec.decode(encoded)
     assert decoded == original

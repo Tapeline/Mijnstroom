@@ -47,5 +47,3 @@ class SystemUserIdProvider(UserIdProvider):
 
     async def require_user(self) -> UserId:
         return self._user
-
-

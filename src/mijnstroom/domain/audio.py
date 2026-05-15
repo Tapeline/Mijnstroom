@@ -35,5 +35,3 @@ class FilePath:
     def __post_init__(self) -> None:
         if not self.value:
             raise ValidationError("File path cannot be blank")
-
-

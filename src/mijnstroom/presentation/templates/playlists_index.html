@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% set active = 'playlists' %}
+{% block title %}Playlists — Mijnstroom{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">Playlists</h1>
+{% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
+
+<form class="mij-form" method="post" action="/playlists" style="max-width:520px">
+  <div class="mij-form-row">
+    <label>New playlist</label>
+    <input type="text" name="name" placeholder="e.g. Driving mix">
+  </div>
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">Create</button>
+  </div>
+</form>
+
+{% if playlists %}
+<h2 class="mij-section-title">Your playlists</h2>
+<div class="mij-card-grid">
+  {% for p in playlists %}
+  <div class="mij-card-cell">
+    <a class="mij-card" href="/playlists/{{ p.id }}">
+      <div class="mij-card-cover">
+        <span class="mij-card-cover-letter">{{ (p.name[:1] or '?')|upper }}</span>
+      </div>
+      <div class="mij-card-body">
+        <div class="mij-card-title">{{ p.name }}</div>
+        <div class="mij-card-subtitle">Created {{ p.created_at.strftime('%Y-%m-%d') }}</div>
+      </div>
+    </a>
+    <div class="mij-card-actions">
+      <a href="/playlists/{{ p.id }}">Open</a>
+      <a href="/playlists/{{ p.id }}/delete"
+         data-confirm="Delete playlist?"
+         onclick="return confirm('Delete playlist?');">Delete</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="mij-muted">No playlists yet.</p>
+{% endif %}
+{% endblock %}

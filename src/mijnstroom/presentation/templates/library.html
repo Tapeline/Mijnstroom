@@ -1,0 +1,65 @@
+{% extends "_base.html" %}
+{% set active = 'library' %}
+{% block title %}Library — Mijnstroom{% endblock %}
+
+{% block extra_js %}
+<script id="mij-queue-data" type="application/json">[
+{% for t in tracks %}
+{"url":"/track/{{ t.id }}/stream","title":"{{ t.title|e }}","artist":"{{ t.artist|e }}","cover":"{% if t.has_cover %}/track/{{ t.id }}/cover{% endif %}"}{% if not loop.last %},{% endif %}
+{% endfor %}
+]</script>
+{% endblock %}
+
+{% block topbar_search %}
+<form class="mij-topbar-search" method="get" action="/library">
+  <input type="search" name="q" value="{{ query or '' }}" placeholder="Search library">
+</form>
+{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">Library</h1>
+<p class="mij-muted">{{ total }} track{% if total != 1 %}s{% endif %}{% if query %} matching "{{ query }}"{% endif %}</p>
+
+{% if tracks %}
+<div class="mij-card-grid">
+  {% for t in tracks %}
+  <div class="mij-card-cell">
+    <div class="mij-card">
+      <div class="mij-card-cover">
+        {% if t.has_cover %}
+        <img src="/track/{{ t.id }}/cover" alt="">
+        {% else %}
+        <span class="mij-card-cover-letter">{{ (t.title[:1] or '?')|upper }}</span>
+        {% endif %}
+        <a class="mij-card-play mij-play"
+           href="/track/{{ t.id }}/stream"
+           data-stream-url="/track/{{ t.id }}/stream"
+           data-title="{{ t.title|e }}"
+           data-artist="{{ t.artist|e }}"
+           data-queue-index="{{ loop.index0 }}"
+           {% if t.has_cover %}data-cover="/track/{{ t.id }}/cover"{% endif %}
+           title="Play">&#9654;</a>
+      </div>
+      <a href="/track/{{ t.id }}" data-no-fade="false">
+        <div class="mij-card-body">
+          <div class="mij-card-title">{{ t.title }}</div>
+          <div class="mij-card-subtitle">{{ t.artist }}{% if t.album and t.album != '-' %} &middot; {{ t.album }}{% endif %}</div>
+        </div>
+      </a>
+      <div class="mij-card-actions">
+        <a href="/track/{{ t.id }}/download">Download</a>
+        <a href="/track/{{ t.id }}/edit">Edit</a>
+        <a href="/track/{{ t.id }}/delete" data-confirm="Delete this track?" onclick="return confirm('Delete this track?');">Delete</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="mij-muted">No tracks yet.{% if not query %} Try <a href="/upload">uploading</a> a file or <a href="/youtube">downloading from YouTube</a>.{% endif %}</p>
+{% endif %}
+{% endblock %}
+
+{% block fab %}
+<a class="mij-fab" href="/upload" title="Upload">&#43;</a>
+{% endblock %}

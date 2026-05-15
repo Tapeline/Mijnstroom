@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+{% set active = 'upload' %}
+{% block title %}Upload — Mijnstroom{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">Upload audio</h1>
+
+{% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
+
+<form class="mij-form" method="post" enctype="multipart/form-data" action="/upload">
+  <div class="mij-form-row">
+    <label for="audio">Audio file</label>
+    <input type="file" id="audio" name="audio">
+    <p class="mij-muted" style="margin-top:8px">Supported: MP3, M4A/AAC, OGG, FLAC, WAV, OPUS.</p>
+  </div>
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">Upload</button>
+    <a class="mij-btn mij-btn-flat" href="/library">Cancel</a>
+  </div>
+</form>
+{% endblock %}

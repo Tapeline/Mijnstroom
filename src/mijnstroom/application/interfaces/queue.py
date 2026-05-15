@@ -30,5 +30,3 @@ class QueueGateway(Protocol):
 
     @abstractmethod
     async def delete(self, id: JobId) -> None: ...
-
-

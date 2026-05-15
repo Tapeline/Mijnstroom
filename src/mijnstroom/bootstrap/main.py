@@ -9,12 +9,13 @@ from mijnstroom.bootstrap.logging import configure_logging
 from mijnstroom.infrastructure.persistence.sqlite import SqliteSettings, apply_migrations
 from mijnstroom.presentation.http.app import create_app
 
+from src.mijnstroom.bootstrap.config import load_config
+
 
 def build_app_from_env() -> tuple[Config, Litestar]:
     """Build a fresh container + app from the ambient configuration."""
     configure_logging()
-    # Phase 1 uses defaults; a real deployment wires ``load_config`` here.
-    config = Config()
+    config = load_config("config.yml")
     data_dir = os.environ.get("MIJNSTROOM_DATA_DIR")
     if data_dir:
         from dataclasses import replace
@@ -46,5 +47,3 @@ def main() -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     main()
-
-

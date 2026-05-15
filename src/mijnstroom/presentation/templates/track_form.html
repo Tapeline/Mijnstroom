@@ -1,0 +1,56 @@
+{% extends "_base.html" %}
+{% set active = 'library' %}
+{% block title %}{{ heading }} — Mijnstroom{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">{{ heading }}</h1>
+{% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
+
+<form class="mij-form" method="post" enctype="multipart/form-data" action="{{ action }}">
+  {% if probed %}
+  <p class="mij-muted">Detected format <code>{{ probed.format }}</code>, duration {{ probed.duration }} ms.</p>
+  {% endif %}
+  {% if incoming_path %}<input type="hidden" name="incoming_path" value="{{ incoming_path }}">{% endif %}
+
+  <div class="mij-form-row">
+    <label>Title</label>
+    <input type="text" name="title" value="{{ form.title or '' }}">
+  </div>
+  <div class="mij-form-row">
+    <label>Artist</label>
+    <input type="text" name="artist" value="{{ form.artist or '' }}">
+  </div>
+  <div class="mij-form-row">
+    <label>Album</label>
+    <input type="text" name="album" value="{{ form.album or '' }}">
+  </div>
+  <div class="mij-form-row">
+    <label>Year</label>
+    <input type="text" name="year" value="{{ form.year or '' }}" style="width:120px">
+  </div>
+  <div class="mij-form-row">
+    <label>Genre</label>
+    <input type="text" name="genre" value="{{ form.genre or '' }}">
+  </div>
+  <div class="mij-form-row">
+    <label>Lyrics</label>
+    <textarea name="lyrics" rows="10">{{ form.lyrics or '' }}</textarea>
+  </div>
+  <div class="mij-form-row">
+    <label>Cover image</label>
+    <input type="file" name="cover" accept="image/*">
+    {% if has_cover %}
+    <div class="mij-mt-16">
+      <label style="display:inline; text-transform:none; font-weight:400; color:#212121">
+        <input type="checkbox" name="clear_cover" value="1"> Remove existing cover
+      </label>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">{{ submit_label }}</button>
+    {% if cancel_url %}<a class="mij-btn mij-btn-flat" href="{{ cancel_url }}">Cancel</a>{% endif %}
+  </div>
+</form>
+{% endblock %}

@@ -36,5 +36,3 @@ class Track:
             raise ValidationError("Track duration cannot be negative")
         if self.year is not None and (self.year < 1 or self.year > 9999):
             raise ValidationError(f"Invalid track year: {self.year}")
-
-

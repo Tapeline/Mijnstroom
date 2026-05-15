@@ -45,9 +45,10 @@ async def test_authenticated_request_passes_middleware(tmp_data_dir: str) -> Non
     cookie = codec.encode(SessionData(sub="me"))
     async with AsyncTestClient(app=app) as client:
         client.cookies.set(SESSION_COOKIE_NAME, cookie)
-        # No route at / yet => 404 from Litestar, but it passed middleware.
+        # / redirects to /library now; either way it must not be the login redirect.
         response = await client.get("/", follow_redirects=False)
-    assert response.status_code in (404, 405)
+    # Either 404 (no route) or 302/303 to /library; never /auth/login.
+    assert response.headers.get("location") != "/auth/login"
 
 
 @pytest.mark.asyncio

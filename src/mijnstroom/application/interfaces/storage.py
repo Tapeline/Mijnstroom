@@ -29,5 +29,3 @@ class FileStorage(Protocol):
 
     @abstractmethod
     async def delete(self, path: str) -> None: ...
-
-

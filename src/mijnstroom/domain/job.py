@@ -43,5 +43,3 @@ class Job:
             raise ValidationError("Job id cannot be blank")
         if self.attempts < 0:
             raise ValidationError("Job attempts cannot be negative")
-
-

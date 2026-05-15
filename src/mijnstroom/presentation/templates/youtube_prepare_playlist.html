@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+{% set active = 'youtube' %}
+{% block title %}Prepare playlist: {{ playlist.title }} — Mijnstroom{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">{{ playlist.title }}</h1>
+<p class="mij-muted">{{ playlist.entries|length }} entries</p>
+
+<form method="post" action="/youtube/submit-playlist">
+<input type="hidden" name="url" value="{{ playlist.url }}">
+<input type="hidden" name="entry_count" value="{{ playlist.entries|length }}">
+
+<table class="mij-prepare-table">
+<thead>
+<tr>
+  <th style="width:40px">Use</th>
+  <th>Title</th>
+  <th>Artist</th>
+  <th>Album</th>
+  <th style="width:70px">Year</th>
+  <th style="width:120px">Genre</th>
+</tr>
+</thead>
+<tbody>
+{% for e in playlist.entries %}
+<tr>
+  <td><input type="checkbox" name="enabled_{{ loop.index0 }}" value="1" checked></td>
+  <td>
+    <input type="hidden" name="url_{{ loop.index0 }}" value="{{ e.url }}">
+    <input type="text" name="title_{{ loop.index0 }}" value="{{ e.title }}">
+  </td>
+  <td><input type="text" name="artist_{{ loop.index0 }}" value="{{ e.uploader or '' }}"></td>
+  <td><input type="text" name="album_{{ loop.index0 }}" value="{{ playlist.title }}"></td>
+  <td><input type="text" name="year_{{ loop.index0 }}" value="" style="width:60px"></td>
+  <td><input type="text" name="genre_{{ loop.index0 }}" value="" style="width:100px"></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="mij-mt-16">
+  <button class="mij-btn" type="submit">Enqueue downloads</button>
+  <a class="mij-btn mij-btn-flat" href="/youtube">Back</a>
+</div>
+</form>
+{% endblock %}

@@ -15,9 +15,7 @@ async def test_apply_migrations_creates_tables(db_path: str) -> None:
         )
         rows = await cursor.fetchall()
     names = {r[0] for r in rows}
-    assert {"tracks", "playlists", "playlist_tracks", "jobs", "schema_version"}.issubset(
-        names
-    )
+    assert {"tracks", "playlists", "playlist_tracks", "jobs", "schema_version"}.issubset(names)
 
 
 @pytest.mark.asyncio

@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+{% set active = 'youtube' %}
+{% block title %}Prepare: {{ video.title }} — Mijnstroom{% endblock %}
+
+{% block content %}
+<h1 class="mij-page-title">{{ video.title }}</h1>
+<p class="mij-muted">By {{ video.uploader or 'unknown' }}{% if video.duration_ms %} &middot; {{ (video.duration_ms // 1000) // 60 }}:{{ '%02d' % ((video.duration_ms // 1000) % 60) }}{% endif %}</p>
+
+<form method="post" action="/youtube/submit" id="yt-submit-form">
+<input type="hidden" name="url" value="{{ video.url }}">
+<input type="hidden" name="piece_count" id="yt-piece-count" value="{{ pieces|length }}">
+
+<table class="mij-prepare-table" id="yt-pieces-table">
+<thead>
+<tr>
+  <th style="width:40px">Use</th>
+  <th>Start (ms)</th>
+  <th>End (ms)</th>
+  <th>Title</th>
+  <th>Artist</th>
+  <th>Album</th>
+  <th style="width:70px">Year</th>
+  <th style="width:120px">Genre</th>
+  <th style="width:40px"></th>
+</tr>
+</thead>
+<tbody id="yt-pieces-tbody">
+{% for piece in pieces %}
+<tr class="yt-piece-row">
+  <td><input type="checkbox" name="enabled_{{ loop.index0 }}" value="1" checked></td>
+  <td><input type="text" name="start_ms_{{ loop.index0 }}" value="{% if piece.start_ms is not none %}{{ piece.start_ms }}{% endif %}"></td>
+  <td><input type="text" name="end_ms_{{ loop.index0 }}" value="{% if piece.end_ms is not none %}{{ piece.end_ms }}{% endif %}"></td>
+  <td><input type="text" name="title_{{ loop.index0 }}" value="{{ piece.title }}"></td>
+  <td><input type="text" name="artist_{{ loop.index0 }}" value="{{ piece.artist or video.uploader or '' }}"></td>
+  <td><input type="text" name="album_{{ loop.index0 }}" value=""></td>
+  <td><input type="text" name="year_{{ loop.index0 }}" value="" style="width:60px"></td>
+  <td><input type="text" name="genre_{{ loop.index0 }}" value="" style="width:100px"></td>
+  <td><button type="button" class="mij-btn mij-btn-flat yt-piece-remove" style="padding:4px 8px" title="Remove">&#10005;</button></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="mij-mt-16">
+  <button class="mij-btn mij-btn-flat" type="button" id="yt-add-piece">+ Add piece</button>
+  <button class="mij-btn" type="submit">Enqueue download</button>
+  <a class="mij-btn mij-btn-flat" href="/youtube">Back</a>
+</div>
+</form>
+{% endblock %}

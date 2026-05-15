@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 
+import dature
+
 
 @dataclass(frozen=True, slots=True)
 class StorageConfig:
@@ -54,11 +56,8 @@ class Config:
 
 
 def load_config(path: str) -> Config:  # pragma: no cover
-    """Load configuration from a YAML file using ``dature``.
-
-    Left intentionally empty per ``spec/MAIN.md``: the expected
-    ``dature`` API surface is not confirmed at the time of writing.
-    """
-    raise NotImplementedError("load_config is not implemented yet")
-
-
+    return dature.load(
+        dature.EnvSource(prefix="MS_"),
+        dature.Yaml12Source(file=path),
+        schema=Config,
+    )

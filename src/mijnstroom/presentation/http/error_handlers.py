@@ -71,5 +71,3 @@ def app_exception_handler(request: Request, exc: Exception) -> Response[object]:
         status_code=status_code,
         media_type=MediaType.JSON,
     )
-
-

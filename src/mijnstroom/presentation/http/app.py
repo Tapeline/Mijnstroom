@@ -10,7 +10,17 @@ from litestar.static_files import create_static_files_router
 from litestar.template.config import TemplateConfig
 
 from mijnstroom.presentation.http.controllers.auth import AuthController
+from mijnstroom.presentation.http.controllers.bulk_edit import BulkEditController
 from mijnstroom.presentation.http.controllers.health import healthz
+from mijnstroom.presentation.http.controllers.library import LibraryController
+from mijnstroom.presentation.http.controllers.playlists import PlaylistsController
+from mijnstroom.presentation.http.controllers.queue import QueueController
+from mijnstroom.presentation.http.controllers.track import TrackController
+from mijnstroom.presentation.http.controllers.upload import (
+    FinalizeUploadController,
+    UploadController,
+)
+from mijnstroom.presentation.http.controllers.youtube import YoutubeController
 from mijnstroom.presentation.http.error_handlers import app_exception_handler
 from mijnstroom.presentation.http.middleware import auth_middleware
 
@@ -40,6 +50,14 @@ def create_app(container: AsyncContainer) -> Litestar:
         route_handlers=[
             healthz,
             AuthController,
+            LibraryController,
+            UploadController,
+            FinalizeUploadController,
+            TrackController,
+            PlaylistsController,
+            QueueController,
+            YoutubeController,
+            BulkEditController,
             static_router,
         ],
         template_config=TemplateConfig(

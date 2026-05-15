@@ -55,5 +55,3 @@ class SqliteTransaction(Transaction):
         if self._conn is not None:
             await self._conn.close()
             self._conn = None
-
-

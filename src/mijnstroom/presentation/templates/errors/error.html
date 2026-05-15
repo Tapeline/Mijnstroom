@@ -1,14 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Error {{ status_code }} - Mijnstroom</title>
-<link rel="stylesheet" type="text/css" href="/static/style.css">
-</head>
-<body>
-<h1>Error {{ status_code }}</h1>
-<p>Code: <code>{{ error_code }}</code></p>
-{% if message %}<p>{{ message }}</p>{% endif %}
-<p><a href="/">Back to library</a></p>
-</body>
-</html>
+{% extends "_base.html" %}
+{% set active = 'library' %}
+{% block title %}Error {{ status_code }} — Mijnstroom{% endblock %}
+
+{% block content %}
+<div class="mij-error-page">
+  <h1>{{ status_code }}</h1>
+  <p><code>{{ error_code }}</code></p>
+  {% if message %}<p>{{ message }}</p>{% endif %}
+  <p class="mij-mt-16"><a class="mij-btn" href="/library">Back to library</a></p>
+</div>
+{% endblock %}

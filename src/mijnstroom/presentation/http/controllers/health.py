@@ -8,5 +8,3 @@ from mijnstroom.bootstrap.config import Config
 @inject
 async def healthz(config: FromDishka[Config]) -> dict[str, str]:
     return {"status": "ok", "data_dir": config.storage.data_dir}
-
-

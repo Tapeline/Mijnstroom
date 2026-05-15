@@ -69,9 +69,7 @@ async def apply_migrations(settings: SqliteSettings) -> None:
         )
         # Acquire a writer lock for the duration of migration discovery.
         await conn.execute("BEGIN IMMEDIATE")
-        cursor = await conn.execute(
-            "SELECT COALESCE(MAX(version), 0) FROM schema_version"
-        )
+        cursor = await conn.execute("SELECT COALESCE(MAX(version), 0) FROM schema_version")
         row = await cursor.fetchone()
         current = int(row[0]) if row else 0
         pending = [m for m in _discover_migrations() if m[0] > current]
@@ -88,5 +86,3 @@ async def apply_migrations(settings: SqliteSettings) -> None:
             )
     finally:
         await conn.close()
-
-

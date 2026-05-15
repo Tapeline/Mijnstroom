@@ -55,3 +55,8 @@ class TagWriter(Protocol):
     ) -> None: ...
 
 
+class CoverExtractor(Protocol):
+    """Extracts embedded album art from an audio file."""
+
+    @abstractmethod
+    async def extract(self, source_path: str) -> bytes | None: ...

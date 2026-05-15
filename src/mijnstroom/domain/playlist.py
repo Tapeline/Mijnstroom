@@ -20,5 +20,3 @@ class Playlist:
             raise ValidationError("Playlist id cannot be blank")
         if not self.name or not self.name.strip():
             raise ValidationError("Playlist name cannot be blank")
-
-

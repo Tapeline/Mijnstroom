@@ -44,5 +44,3 @@ class SessionCodec:
             pending_nonce=payload.get("pending_nonce"),
             pending_pkce_verifier=payload.get("pending_pkce_verifier"),
         )
-
-

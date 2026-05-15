@@ -50,6 +50,9 @@ class TrackRepo(Protocol):
     @abstractmethod
     async def delete(self, id: TrackId) -> None: ...
 
+    @abstractmethod
+    async def apply_patch(self, ids: list[TrackId], patch: TrackPatch) -> int: ...
+
 
 class PlaylistRepo(Protocol):
     @abstractmethod
@@ -104,5 +107,3 @@ class JobRepo(Protocol):
 
     @abstractmethod
     async def delete(self, id: JobId) -> None: ...
-
-

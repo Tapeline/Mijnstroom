@@ -1,70 +1,1103 @@
-/* Mijnstroom legacy stylesheet -- HTML 4.01 / CSS 2.1 only.
- * Approximates Google Play Music 2014 (Material v1) using only solid
- * colour blocks and basic borders. No flexbox, no transitions, no
- * shadows, no gradients.
- */
+/* ============================================================
+ * Mijnstroom — Google Play Music 2014 redesign
+ * Material Design 1 / m1.material.io
+ *
+ * Layered for legacy compatibility:
+ *   1. CSS 2.1 core      — works on Nokia / IE6+ / opera mini
+ *   2. CSS 3 enhancement — for modern browsers (shadows, transforms,
+ *      transitions, flex). Old browsers ignore these rules.
+ *
+ * Class prefix: mij-
+ * GPM palette: orange primary (#FF5722), accent (#FF9800), greys.
+ * ============================================================ */
+
+/* --- Google Fonts: Roboto. Old browsers ignore the import. --- */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+/* ============================================================
+   RESET
+   ============================================================ */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, address, big, cite, code, del, em, img, ins, q, s, samp,
+small, strong, sub, sup, b, u, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, thead, tr, th, td,
+article, aside, details, figcaption, figure, footer, header, main,
+nav, section, summary {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html {
+    font-size: 14px;
+    color: #212121;
+    background: #FAFAFA;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #FAFAFA;
-    color: #212121;
     margin: 0;
     padding: 0;
 }
 
-a { color: #FF5722; text-decoration: none; }
+a {
+    color: #FF5722;
+    text-decoration: none;
+}
 a:hover { text-decoration: underline; }
 
-h1, h2, h3 { color: #212121; margin-top: 1em; margin-bottom: 0.5em; }
+ul { list-style: none; }
+img { max-width: 100%; height: auto; border: 0; vertical-align: middle; }
 
-code {
-    background-color: #EEEEEE;
-    padding: 2px 4px;
-    border: 1px solid #DDDDDD;
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
 
-.topbar {
-    background-color: #FF5722;
+/* ============================================================
+   APP CHROME: TOP BAR
+   ============================================================ */
+.mij-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: #FF5722;
     color: #FFFFFF;
-    padding: 12px 16px;
-    border-bottom: 2px solid #E64A19;
+    z-index: 900;
+    -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+       -moz-box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
-.topbar a, .topbar a:hover { color: #FFFFFF; }
 
-.container { padding: 16px; }
+.mij-topbar-inner {
+    height: 100%;
+    padding: 0 16px;
+    /* clearfix */
+    overflow: hidden;
+}
 
-table.list {
+.mij-topbar-menu {
+    float: left;
+    display: block;
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 24px;
+    line-height: 56px;
+    cursor: pointer;
+    padding: 0 12px 0 0;
+    width: 40px;
+    height: 56px;
+}
+.mij-topbar-menu:hover { opacity: 0.8; }
+
+.mij-topbar-brand {
+    float: left;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 56px;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-right: 24px;
+    white-space: nowrap;
+}
+.mij-topbar-brand:hover { text-decoration: none; opacity: 0.95; }
+
+.mij-topbar-actions {
+    float: right;
+    line-height: 56px;
+}
+.mij-topbar-actions a {
+    color: #FFFFFF;
+    margin-left: 16px;
+}
+.mij-topbar-actions a:hover { opacity: 0.8; text-decoration: none; }
+
+/* ============================================================
+   SIDEBAR (LEFT NAV)
+   ============================================================ */
+.mij-sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    width: 240px;
+    background: #FFFFFF;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 800;
+    border-right: 1px solid #E0E0E0;
+}
+
+.mij-sidebar-section {
+    border-bottom: 1px solid #E0E0E0;
+    padding: 8px 0;
+}
+
+.mij-sidebar-label {
+    padding: 12px 16px 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+}
+
+.mij-sidebar-link {
+    display: block;
+    padding: 12px 16px;
+    color: #424242;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    line-height: 20px;
+}
+.mij-sidebar-link:hover {
+    background: #F5F5F5;
+    text-decoration: none;
+}
+.mij-sidebar-link.is-active {
+    background: #FBE9E7;
+    color: #FF5722;
+    border-left-color: #FF5722;
+}
+
+.mij-sidebar-icon {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    margin-right: 16px;
+    color: #757575;
+    font-size: 16px;
+}
+.mij-sidebar-link.is-active .mij-sidebar-icon { color: #FF5722; }
+
+/* ============================================================
+   OVERLAY (mobile sidebar)
+   ============================================================ */
+.mij-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 799;
+}
+.mij-overlay.is-visible { display: block; }
+
+/* ============================================================
+   PAGE / CONTENT AREA
+   ============================================================ */
+.mij-page {
+    padding-top: 56px;       /* below top bar */
+    padding-bottom: 96px;    /* above bottom player */
+    margin-left: 240px;      /* clear sidebar */
+    min-height: 100vh;
+    min-height: 100%;        /* legacy fallback */
+}
+
+.mij-content {
+    padding: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.mij-page-title {
+    font-size: 28px;
+    font-weight: 300;
+    color: #212121;
+    margin: 0 0 24px;
+    line-height: 1.2;
+}
+
+.mij-section-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #212121;
+    margin: 32px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.mij-muted { color: #9E9E9E; }
+.mij-error { color: #C62828; }
+
+/* ============================================================
+   CARDS — track / playlist grid
+   ============================================================ */
+.mij-card-grid {
+    /* legacy: float-based grid. Modern: flex/grid layered below. */
+    margin: 0 -8px;
+    overflow: hidden;       /* clearfix */
+}
+.mij-card-grid:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.mij-card-cell {
+    float: left;
+    width: 25%;            /* 4 columns on wide screens (legacy) */
+    padding: 8px;
+}
+
+@media screen and (max-width: 1200px) {
+    .mij-card-cell { width: 33.3333%; }
+}
+@media screen and (max-width: 900px) {
+    .mij-card-cell { width: 50%; }
+}
+@media screen and (max-width: 600px) {
+    .mij-card-cell { width: 100%; }
+}
+
+.mij-card {
+    display: block;
+    background: #FFFFFF;
+    color: #212121;
+    text-decoration: none;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+.mij-card:hover { text-decoration: none; }
+
+/* Modern: lift on hover. Old browsers see nothing. */
+@media screen and (min-width: 600px) {
+    .mij-card {
+        -webkit-transition: -webkit-box-shadow 0.18s ease,
+                            -webkit-transform 0.18s ease;
+                transition: box-shadow 0.18s ease, transform 0.18s ease;
+    }
+    .mij-card:hover {
+        -webkit-box-shadow: 0 8px 17px rgba(0,0,0,0.25),
+                             0 6px 6px rgba(0,0,0,0.22);
+                box-shadow: 0 8px 17px rgba(0,0,0,0.25),
+                             0 6px 6px rgba(0,0,0,0.22);
+        -webkit-transform: translateY(-2px);
+            -ms-transform: translateY(-2px);
+                transform: translateY(-2px);
+    }
+}
+
+.mij-card-cover {
+    display: block;
+    width: 100%;
+    /* legacy: fixed-height square via padding hack */
+    padding-top: 100%;
+    height: 0;
+    position: relative;
+    background: #E0E0E0;
+    /* GPM placeholder — solid orange gradient when no cover */
+    background-image: -webkit-linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    background-image: -moz-linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    background-image: linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+}
+
+.mij-card-cover img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.mij-card-cover-letter {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    color: #FFFFFF;
+    font-size: 48px;
+    font-weight: 300;
+    text-align: center;
+    line-height: 0;        /* legacy: use padding instead */
+    padding-top: 40%;
+}
+
+/* Play overlay button (modern only). Old browsers won't see the FAB. */
+.mij-card-play {
+    display: none;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FF5722;
+    color: #FFFFFF;
+    line-height: 44px;
+    text-align: center;
+    font-size: 22px;
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+       -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+@media screen and (min-width: 600px) {
+    .mij-card:hover .mij-card-play { display: block; }
+}
+
+.mij-card-body {
+    padding: 12px 14px 14px;
+}
+
+.mij-card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    /* Truncate single line */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mij-card-subtitle {
+    font-size: 13px;
+    color: #757575;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mij-card-actions {
+    padding: 0 14px 12px;
+    font-size: 12px;
+}
+.mij-card-actions a { margin-right: 12px; color: #757575; }
+.mij-card-actions a:hover { color: #FF5722; }
+
+/* ============================================================
+   LIST ROWS (alternate compact view for the queue/playlists)
+   ============================================================ */
+.mij-list {
+    background: #FFFFFF;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.mij-list table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #FFFFFF;
-    border: 1px solid #DDDDDD;
+    font-size: 13px;
 }
-table.list th, table.list td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #EEEEEE;
+.mij-list th, .mij-list td {
+    padding: 12px 16px;
     text-align: left;
     vertical-align: middle;
 }
-table.list th { background-color: #F5F5F5; }
+.mij-list th {
+    background: #F5F5F5;
+    font-weight: 500;
+    color: #757575;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #E0E0E0;
+}
+.mij-list tr { border-bottom: 1px solid #EEEEEE; }
+.mij-list tbody tr:hover { background: #FAFAFA; }
+.mij-list td.mij-actions { white-space: nowrap; text-align: right; }
 
-input[type=text], input[type=password], input[type=number], textarea, select {
-    border: 1px solid #BDBDBD;
-    padding: 4px 6px;
-    background-color: #FFFFFF;
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.mij-btn,
+input[type="submit"].mij-btn,
+button.mij-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #FF5722;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 2px;
     font-family: inherit;
-    font-size: 1em;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+}
+.mij-btn:hover {
+    background: #E64A19;
+    color: #FFFFFF;
+    text-decoration: none;
 }
 
-input[type=submit], button {
-    background-color: #FF5722;
+.mij-btn-flat {
+    background: transparent;
+    color: #FF5722;
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+            box-shadow: none;
+}
+.mij-btn-flat:hover {
+    background: #FFCCBC;
+    color: #FF5722;
+}
+
+.mij-btn-danger { background: #C62828; }
+.mij-btn-danger:hover { background: #B71C1C; }
+.mij-btn-primary { background: #E8710A; color: #fff; }
+.mij-btn-primary:hover { background: #D46A09; }
+
+/* ============================================================
+   FAB (floating action button) — modern only
+   ============================================================ */
+.mij-fab {
+    display: none;
+    position: fixed;
+    bottom: 110px;     /* above bottom player */
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #FF9800;        /* accent */
     color: #FFFFFF;
-    border: 1px solid #E64A19;
-    padding: 4px 10px;
+    font-size: 28px;
+    line-height: 56px;
+    text-align: center;
+    z-index: 850;
+    -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+       -moz-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-decoration: none;
+}
+.mij-fab:hover {
+    background: #FB8C00;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+@media screen and (min-width: 600px) {
+    .mij-fab { display: block; }
+    .mij-fab {
+        -webkit-transition: background 0.2s ease, -webkit-transform 0.2s ease;
+                transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .mij-fab:hover {
+        -webkit-transform: scale(1.06);
+            -ms-transform: scale(1.06);
+                transform: scale(1.06);
+    }
+}
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="email"],
+input[type="file"],
+textarea, select {
     font-family: inherit;
-    font-size: 1em;
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid #BDBDBD;
+    background: #FFFFFF;
+    color: #212121;
+    border-radius: 2px;
+    outline: none;
+    line-height: 1.4;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="email"]:focus,
+textarea:focus, select:focus {
+    border-color: #FF5722;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.mij-form {
+    background: #FFFFFF;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    border-radius: 2px;
+    padding: 24px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.mij-form-row {
+    margin-bottom: 16px;
+}
+.mij-form-row label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+    margin-bottom: 6px;
+}
+.mij-form-row input[type="text"],
+.mij-form-row input[type="number"],
+.mij-form-row input[type="url"],
+.mij-form-row textarea,
+.mij-form-row select {
+    width: 100%;
+}
+
+.mij-form-actions {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #EEEEEE;
+}
+
+/* Inline search bar in topbar */
+.mij-topbar-search {
+    float: left;
+    margin-left: 24px;
+    margin-top: 10px;
+}
+.mij-topbar-search input {
+    width: 320px;
+    max-width: 50vw;
+    height: 36px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.18);
+    color: #FFFFFF;
+}
+.mij-topbar-search input:focus {
+    background: rgba(255,255,255,0.28);
+    border-color: rgba(255,255,255,0.5);
+}
+.mij-topbar-search input::-webkit-input-placeholder { color: rgba(255,255,255,0.8); }
+.mij-topbar-search input::-moz-placeholder          { color: rgba(255,255,255,0.8); }
+.mij-topbar-search input:-ms-input-placeholder      { color: rgba(255,255,255,0.8); }
+
+/* ============================================================
+   BOTTOM PLAYER BAR — modern only (fixed, requires <audio>)
+   GPM 2014 style: progress spans full width on top, cover
+   takes full height, controls centered below.
+   ============================================================ */
+.mij-player {
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 90px;
+    background: #FFFFFF;
+    border-top: 1px solid #E0E0E0;
+    z-index: 850;
+    -webkit-box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
+       -moz-box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
+}
+@media screen and (min-width: 600px) {
+    .mij-player { display: block; }
+}
+
+/* Progress bar — full width, sits on top edge */
+.mij-player-progress {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: #E0E0E0;
     cursor: pointer;
 }
-input[type=submit]:hover, button:hover { background-color: #E64A19; }
+.mij-player-progress-fill {
+    height: 100%;
+    width: 0;
+    background: #FF5722;
+    position: relative;
+}
+/* Circular handle on progress bar */
+.mij-player-progress-handle {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF5722;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+.mij-player-progress:hover .mij-player-progress-handle,
+.mij-player-progress.is-dragging .mij-player-progress-handle {
+    opacity: 1;
+}
+.mij-player-progress-times {
+    display: none;  /* hidden; progress bar itself is the time indicator */
+}
 
-.error { color: #B71C1C; }
-.muted { color: #757575; }
+/* Player inner — flex layout: cover | meta+controls */
+.mij-player-inner {
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+/* Cover — full bar height, square (90x90) */
+.mij-player-cover {
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+    background: #E0E0E0;
+    background-image: -webkit-linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    background-image:         linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    overflow: hidden;
+}
+.mij-player-cover img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* Right side: meta + controls */
+.mij-player-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Meta row: title/artist + volume */
+.mij-player-meta-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px 0;
+    min-height: 36px;
+}
+.mij-player-meta {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+.mij-player-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.mij-player-artist {
+    font-size: 12px;
+    color: #757575;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Volume control */
+.mij-player-volume {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    flex-shrink: 0;
+}
+.mij-player-volume-btn {
+    background: none;
+    border: none;
+    color: #424242;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mij-player-volume-btn:hover { color: #FF5722; }
+.mij-player-volume-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #E0E0E0;
+    border-radius: 2px;
+    outline: none;
+    margin-left: 8px;
+    cursor: pointer;
+}
+.mij-player-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF5722;
+    cursor: pointer;
+}
+.mij-player-volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF5722;
+    cursor: pointer;
+    border: none;
+}
+
+/* Controls row: prev/play/next + playlist buttons */
+.mij-player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px 8px;
+    gap: 4px;
+}
+.mij-player-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #424242;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.mij-player-btn:hover { color: #FF5722; background: rgba(255,87,34,0.08); }
+.mij-player-btn-play {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    background: #FF5722;
+    color: #FFFFFF;
+}
+.mij-player-btn-play:hover { background: #E64A19; color: #FFFFFF; }
+
+/* Playlist / repeat controls */
+.mij-player-pl-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.mij-player-btn.is-active {
+    color: #FF5722;
+}
+
+/* Track info area (no track playing placeholder) */
+.mij-player-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #9E9E9E;
+    font-size: 14px;
+}
+
+/* ============================================================
+   PAGE-SPECIFIC: TRACK DETAIL HEADER (album-style hero)
+   ============================================================ */
+.mij-track-hero {
+    background: #FF5722;
+    background-image: -webkit-linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    background-image:         linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+    color: #FFFFFF;
+    padding: 32px 24px;
+    margin: -24px -24px 24px;
+    overflow: hidden;     /* clearfix */
+}
+.mij-track-hero-cover {
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin-right: 24px;
+    background: rgba(255,255,255,0.12);
+    -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+       -moz-box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+.mij-track-hero-cover img { width: 100%; height: 100%; display: block; }
+.mij-track-hero-info { overflow: hidden; padding-top: 28px; }
+.mij-track-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    margin: 0 0 8px;
+}
+.mij-track-hero-title {
+    font-size: 32px;
+    font-weight: 300;
+    margin: 0 0 8px;
+    line-height: 1.15;
+}
+.mij-track-hero-subtitle {
+    font-size: 15px;
+    opacity: 0.92;
+    margin: 0 0 16px;
+}
+.mij-track-hero-actions a, .mij-track-hero-actions button {
+    margin-right: 8px;
+}
+.mij-track-hero .mij-btn {
+    background: #FFFFFF;
+    color: #FF5722;
+}
+.mij-track-hero .mij-btn:hover { background: rgba(255,255,255,0.92); }
+.mij-track-hero .mij-btn-flat {
+    background: transparent;
+    color: #FFFFFF;
+}
+.mij-track-hero .mij-btn-flat:hover {
+    background: rgba(255,255,255,0.18);
+    color: #FFFFFF;
+}
+
+@media screen and (max-width: 600px) {
+    .mij-track-hero-cover {
+        float: none;
+        margin: 0 auto 16px;
+        width: 160px; height: 160px;
+    }
+    .mij-track-hero-info { padding-top: 0; text-align: center; }
+}
+
+/* ============================================================
+   YOUTUBE SEARCH RESULT ROWS
+   ============================================================ */
+.mij-yt-result {
+    display: block;
+    background: #FFFFFF;
+    margin-bottom: 8px;
+    padding: 12px 16px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    color: #212121;
+    text-decoration: none;
+}
+.mij-yt-result:hover {
+    background: #F9F9F9;
+    text-decoration: none;
+}
+.mij-yt-result-thumb {
+    float: left;
+    width: 96px;
+    height: 54px;
+    background: #E0E0E0;
+    margin-right: 16px;
+}
+.mij-yt-result-thumb img { width: 100%; height: 100%; display: block; }
+.mij-yt-result-info { overflow: hidden; padding-top: 4px; }
+.mij-yt-result-title { font-size: 14px; font-weight: 500; color: #212121; margin-bottom: 4px; }
+.mij-yt-result-meta { font-size: 12px; color: #757575; }
+
+/* ============================================================
+   PIECE / ENTRY EDITABLE TABLES (used in YT prepare)
+   ============================================================ */
+.mij-prepare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFFFFF;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    border-radius: 2px;
+    overflow: hidden;
+    font-size: 13px;
+}
+.mij-prepare-table th, .mij-prepare-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #EEEEEE;
+}
+.mij-prepare-table th {
+    background: #F5F5F5;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+}
+.mij-prepare-table input[type="text"] {
+    padding: 4px 6px;
+    font-size: 13px;
+    width: 100%;
+}
+
+/* ============================================================
+   QUEUE SECTIONS
+   ============================================================ */
+.mij-queue-section { margin-bottom: 32px; }
+.mij-queue-section-header {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0 0 12px;
+}
+.mij-queue-section-header .mij-count {
+    color: #9E9E9E;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+.mij-status-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.mij-status-pending   { background: #FFF3E0; color: #E65100; }
+.mij-status-running   { background: #E3F2FD; color: #1565C0; }
+.mij-status-failed    { background: #FFEBEE; color: #C62828; }
+.mij-status-cancelled { background: #EEEEEE; color: #616161; }
+.mij-status-done      { background: #E8F5E9; color: #2E7D32; }
+
+/* ============================================================
+   ERROR PAGE
+   ============================================================ */
+.mij-error-page {
+    max-width: 480px;
+    margin: 80px auto;
+    text-align: center;
+    background: #FFFFFF;
+    padding: 40px 32px;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    border-radius: 2px;
+}
+.mij-error-page h1 {
+    font-size: 72px;
+    font-weight: 300;
+    color: #FF5722;
+    margin: 0 0 8px;
+    line-height: 1;
+}
+.mij-error-page p { color: #757575; margin-bottom: 8px; }
+
+/* ============================================================
+   AUTH LOGIN PAGE
+   ============================================================ */
+.mij-login {
+    max-width: 360px;
+    margin: 120px auto;
+    background: #FFFFFF;
+    padding: 32px;
+    text-align: center;
+    -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+       -moz-box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    border-radius: 2px;
+}
+.mij-login h1 {
+    color: #FF5722;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+/* ============================================================
+   RESPONSIVE — hide sidebar on small screens
+   ============================================================ */
+@media screen and (max-width: 768px) {
+    .mij-sidebar {
+        -webkit-transform: translateX(-100%);
+            -ms-transform: translateX(-100%);
+                transform: translateX(-100%);
+        -webkit-transition: -webkit-transform 0.2s ease;
+                transition: transform 0.2s ease;
+        display: block;
+    }
+    .mij-sidebar.is-open {
+        -webkit-transform: translateX(0);
+            -ms-transform: translateX(0);
+                transform: translateX(0);
+    }
+    /* Legacy fallback: just hide entirely; menu button shows nothing
+       useful on Nokia, but the top-bar links remain reachable. */
+    .mij-page { margin-left: 0; }
+    .mij-content { padding: 16px; }
+    .mij-page-title { font-size: 22px; }
+    .mij-topbar-search { display: none; }
+    .mij-topbar-actions a { margin-left: 8px; font-size: 13px; }
+}
+
+/* Show the menu button only on small screens. */
+.mij-topbar-menu { display: none; }
+@media screen and (max-width: 768px) {
+    .mij-topbar-menu { display: block; }
+}
+
+/* ============================================================
+   RIPPLE container (modern only, JS-driven)
+   ============================================================ */
+.mij-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    -webkit-transform: scale(0);
+        -ms-transform: scale(0);
+            transform: scale(0);
+    -webkit-animation: mij-ripple 0.5s linear;
+            animation: mij-ripple 0.5s linear;
+    pointer-events: none;
+}
+@-webkit-keyframes mij-ripple {
+    to { -webkit-transform: scale(4); opacity: 0; }
+}
+@keyframes mij-ripple {
+    to { transform: scale(4); opacity: 0; }
+}
+
+.mij-btn-flat .mij-ripple,
+.mij-card .mij-ripple,
+.mij-sidebar-link .mij-ripple {
+    background: rgba(255,87,34,0.15);
+}
+
+/* ============================================================
+   PAGE TRANSITION (Material shared-element vibe, modern only)
+   ============================================================ */
+.mij-page-fade {
+    opacity: 1;
+    -webkit-transition: opacity 0.18s ease;
+            transition: opacity 0.18s ease;
+}
+.mij-page-fade.is-leaving { opacity: 0; }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.mij-text-right { text-align: right; }
+.mij-mt-16 { margin-top: 16px; }
+.mij-mb-16 { margin-bottom: 16px; }
+.mij-hidden { display: none; }

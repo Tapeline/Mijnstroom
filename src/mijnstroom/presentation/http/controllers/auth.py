@@ -77,11 +77,7 @@ class AuthController(Controller):
         if not raw:
             raise Unauthenticated("Missing session cookie")
         data = codec.decode(raw)
-        if (
-            not data.pending_state
-            or not data.pending_nonce
-            or not data.pending_pkce_verifier
-        ):
+        if not data.pending_state or not data.pending_nonce or not data.pending_pkce_verifier:
             raise Unauthenticated("No pending auth request")
         if state != data.pending_state:
             raise Unauthenticated("State mismatch")

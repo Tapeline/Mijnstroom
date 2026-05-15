@@ -153,5 +153,3 @@ class OIDCClient:
 
     def is_allowed(self, sub: str) -> bool:
         return bool(self._config.allowed_sub) and sub == self._config.allowed_sub
-
-

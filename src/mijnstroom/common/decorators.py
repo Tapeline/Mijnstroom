@@ -24,5 +24,3 @@ def interactor[T](cls: type[T]) -> type[T]:
 def dto[T](cls: type[T]) -> type[T]:
     """Immutable transfer object."""
     return dataclass(frozen=True, slots=True)(cls)
-
-
