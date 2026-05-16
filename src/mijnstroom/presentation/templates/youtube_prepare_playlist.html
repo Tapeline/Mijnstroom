@@ -10,6 +10,7 @@
 <input type="hidden" name="url" value="{{ playlist.url }}">
 <input type="hidden" name="entry_count" value="{{ playlist.entries|length }}">
 
+<div class="mij-table-scroll">
 <table class="mij-prepare-table">
 <thead>
 <tr>
@@ -37,6 +38,7 @@
 {% endfor %}
 </tbody>
 </table>
+</div>
 
 <div class="mij-mt-16">
   <button class="mij-btn" type="submit">Enqueue downloads</button>

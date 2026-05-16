@@ -10,6 +10,7 @@
 <input type="hidden" name="url" value="{{ video.url }}">
 <input type="hidden" name="piece_count" id="yt-piece-count" value="{{ pieces|length }}">
 
+<div class="mij-table-scroll">
 <table class="mij-prepare-table" id="yt-pieces-table">
 <thead>
 <tr>
@@ -40,6 +41,7 @@
 {% endfor %}
 </tbody>
 </table>
+</div>
 
 <div class="mij-mt-16">
   <button class="mij-btn mij-btn-flat" type="button" id="yt-add-piece">+ Add piece</button>

@@ -7,13 +7,11 @@ from dishka import AsyncContainer
 
 from mijnstroom.application.interfaces.queue import QueueGateway
 from mijnstroom.application.worker.dispatch import HANDLER_REGISTRY
-from mijnstroom.bootstrap.config import Config
+from mijnstroom.bootstrap.config import load_config
 from mijnstroom.bootstrap.di.container import build_worker_container
 from mijnstroom.bootstrap.logging import configure_logging
 from mijnstroom.domain.job import Job
 from mijnstroom.infrastructure.persistence.sqlite import SqliteSettings, apply_migrations
-
-from mijnstroom.bootstrap.config import load_config
 
 logger = logging.getLogger(__name__)
 

@@ -68,7 +68,7 @@ async def test_playlist_create_rename_delete(tmp_data_dir: str) -> None:
         assert "Renamed" in response.text
 
         # Delete
-        response = await client.get(f"/playlists/{playlist_id}/delete", follow_redirects=False)
+        response = await client.post(f"/playlists/{playlist_id}/delete", follow_redirects=False)
         assert response.status_code in (302, 303)
 
         response = await client.get("/playlists", follow_redirects=False)

@@ -2,7 +2,7 @@ from dishka.integrations.litestar import FromDishka, inject
 from litestar import Controller, Request, get, post
 from litestar.response import Redirect, Template
 
-from mijnstroom.application.interfaces.repos import TrackQuery
+from mijnstroom.application.interfaces.repos import PlaylistRepo, TrackQuery
 from mijnstroom.application.playlists.create_playlist import CreatePlaylist
 from mijnstroom.application.playlists.delete_playlist import DeletePlaylist
 from mijnstroom.application.playlists.dto import (
@@ -21,6 +21,16 @@ from mijnstroom.application.playlists.track_membership import (
 )
 from mijnstroom.application.tracks.list_tracks import ListTracks
 from mijnstroom.common.errors import ValidationError
+from mijnstroom.presentation.http.view_models.playlist import PlaylistRow
+
+
+def _playlist_row(p, track_count: int, cover_url: str | None) -> PlaylistRow:
+    return PlaylistRow(
+        id=p.id,
+        name=p.name,
+        track_count=track_count,
+        first_track_cover_url=cover_url,
+    )
 
 
 class PlaylistsController(Controller):
@@ -31,11 +41,17 @@ class PlaylistsController(Controller):
     async def index(
         self,
         list_playlists: FromDishka[ListPlaylists],
+        playlist_repo: FromDishka[PlaylistRepo],
     ) -> Template:
         playlists = await list_playlists()
+        rows = []
+        for p in playlists:
+            track_ids = await playlist_repo.list_tracks(p.id)
+            track_count = len(track_ids)
+            rows.append(_playlist_row(p, track_count, None))
         return Template(
             template_name="playlists_index.html",
-            context={"playlists": playlists, "error": None},
+            context={"playlists": rows, "error": None},
         )
 
     @post("/")
@@ -87,7 +103,7 @@ class PlaylistsController(Controller):
         await rename_playlist(RenamePlaylistInput(playlist_id=playlist_id, name=name))
         return Redirect(path=f"/playlists/{playlist_id}")
 
-    @get("/{playlist_id:str}/delete")
+    @post("/{playlist_id:str}/delete")
     @inject
     async def delete(
         self,

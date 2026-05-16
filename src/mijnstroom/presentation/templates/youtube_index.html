@@ -6,13 +6,15 @@
 <h1 class="mij-page-title">YouTube</h1>
 {% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
 
-<form class="mij-form" method="get" action="/youtube/go" style="max-width:720px">
+<form class="mij-form" method="get" action="/youtube/go">
   <div class="mij-form-row">
     <label for="yt-q">Search or paste a YouTube URL</label>
-    <div style="display:flex; gap:8px">
-      <input type="text" id="yt-q" name="q" value="{{ query or '' }}" placeholder="Search query or https://youtube.com/..." style="flex:1">
-      <button class="mij-btn" type="submit">Go</button>
+    <div class="mij-form-row">
+      <input type="text" id="yt-q" name="q" value="{{ query or '' }}" placeholder="Search query or https://youtube.com/..." style="width:100%">
     </div>
+  </div>
+  <div class="mij-form-actions">
+    <button class="mij-btn" type="submit">Go</button>
   </div>
 </form>
 

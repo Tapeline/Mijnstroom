@@ -8,7 +8,6 @@ from mijnstroom.bootstrap.di.container import build_web_container
 from mijnstroom.bootstrap.logging import configure_logging
 from mijnstroom.infrastructure.persistence.sqlite import SqliteSettings, apply_migrations
 from mijnstroom.presentation.http.app import create_app
-
 from src.mijnstroom.bootstrap.config import load_config
 
 

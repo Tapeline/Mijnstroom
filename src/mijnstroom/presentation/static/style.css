@@ -318,6 +318,8 @@ img { max-width: 100%; height: auto; border: 0; vertical-align: middle; }
     text-align: center;
     line-height: 0;        /* legacy: use padding instead */
     padding-top: 40%;
+    overflow: hidden;      /* prevent text from overflowing */
+    pointer-events: none;  /* allow clicks through to card */
 }
 
 /* Play overlay button (modern only). Old browsers won't see the FAB. */
@@ -461,11 +463,15 @@ button.mij-btn {
 /* ============================================================
    FAB (floating action button) — modern only
    ============================================================ */
-.mij-fab {
-    display: none;
+.mij-fab-container {
+    display: block;
     position: fixed;
     bottom: 110px;     /* above bottom player */
     right: 24px;
+    z-index: 850;
+}
+.mij-fab {
+    display: block;
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -474,10 +480,48 @@ button.mij-btn {
     font-size: 28px;
     line-height: 56px;
     text-align: center;
-    z-index: 850;
     -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
        -moz-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-decoration: none;
+}
+.mij-fab:hover {
+    background: #FB8C00;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+@media screen and (min-width: 600px) {
+    .mij-fab-container { display: block; }
+}
+
+/* FAB dial (options that appear above FAB) */
+.mij-fab-options {
+    display: none;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    min-width: 150px;
+}
+.mij-fab-options.is-open {
+    display: block;
+}
+.mij-fab-option {
+    display: block;
+    background: #FFFFFF;
+    color: #212121;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    text-align: right;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+    -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+       -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border-radius: 2px;
+}
+.mij-fab-option:hover {
+    background: #F5F5F5;
     text-decoration: none;
 }
 .mij-fab:hover {
@@ -601,9 +645,10 @@ textarea {
    BOTTOM PLAYER BAR — modern only (fixed, requires <audio>)
    GPM 2014 style: progress spans full width on top, cover
    takes full height, controls centered below.
+   Now shown on mobile too.
    ============================================================ */
 .mij-player {
-    display: none;
+    display: block;
     position: fixed;
     left: 0; right: 0; bottom: 0;
     height: 90px;
@@ -613,9 +658,6 @@ textarea {
     -webkit-box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
        -moz-box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
             box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
-}
-@media screen and (min-width: 600px) {
-    .mij-player { display: block; }
 }
 
 /* Progress bar — full width, sits on top edge */
@@ -819,6 +861,7 @@ textarea {
 
 /* ============================================================
    PAGE-SPECIFIC: TRACK DETAIL HEADER (album-style hero)
+   Now full width.
    ============================================================ */
 .mij-track-hero {
     background: #FF5722;
@@ -826,8 +869,21 @@ textarea {
     background-image:         linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
     color: #FFFFFF;
     padding: 32px 24px;
-    margin: -24px -24px 24px;
+    margin: -24px -24px 24px -24px;
     overflow: hidden;     /* clearfix */
+}
+@media screen and (min-width: 768px) {
+    .mij-track-hero {
+        margin-left: -264px;  /* extend to left edge (sidebar width + page margin) */
+        margin-right: -24px;
+        padding-left: 264px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .mij-track-hero {
+        margin-left: -16px;
+        margin-right: -16px;
+    }
 }
 .mij-track-hero-cover {
     float: left;
@@ -838,8 +894,15 @@ textarea {
     -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.25);
        -moz-box-shadow: 0 4px 10px rgba(0,0,0,0.25);
             box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
 }
 .mij-track-hero-cover img { width: 100%; height: 100%; display: block; }
+.mij-track-hero-cover .mij-card-cover-letter {
+    /* Override card-cover-letter for hero usage */
+    font-size: 72px;
+    padding-top: 35%;
+}
 .mij-track-hero-info { overflow: hidden; padding-top: 28px; }
 .mij-track-hero-eyebrow {
     font-size: 11px;
@@ -1101,3 +1164,179 @@ textarea {
 .mij-mt-16 { margin-top: 16px; }
 .mij-mb-16 { margin-bottom: 16px; }
 .mij-hidden { display: none; }
+.mij-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   SPA CONTENT AREA (injected by AJAX navigation)
+   ============================================================ */
+#mij-spa-content {
+    padding-bottom: 100px; /* space for player */
+}
+
+/* ============================================================
+   PRELOADER (SPA navigation)
+   ============================================================ */
+.mij-preloader {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 950;
+}
+.mij-preloader.is-visible {
+    display: block;
+}
+.mij-preloader-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -20px 0 0 -20px;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #E0E0E0;
+    border-top-color: #FF5722;
+    border-radius: 50%;
+    -webkit-animation: mij-spin 0.8s linear infinite;
+            animation: mij-spin 0.8s linear infinite;
+}
+@-webkit-keyframes mij-spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes mij-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   DIALOGS (CSS 2.1 compatible modal)
+   ============================================================ */
+.mij-dialog-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 900;
+}
+.mij-dialog-backdrop.is-open {
+    display: block;
+}
+.mij-dialog {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -160px; /* half of min-width */
+    margin-top: -100px; /* approximate */
+    background: #FFFFFF;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+       -moz-box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    min-width: 320px;
+    max-width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    z-index: 910;
+}
+.mij-dialog.is-open {
+    display: block;
+}
+.mij-dialog-header {
+    padding: 16px 24px 0;
+    font-size: 20px;
+    font-weight: 400;
+    color: #212121;
+}
+.mij-dialog-body {
+    padding: 16px 24px;
+}
+.mij-dialog-actions {
+    padding: 8px 24px 16px;
+    text-align: right;
+}
+.mij-dialog-actions .mij-btn {
+    margin-left: 8px;
+}
+.mij-dialog select,
+.mij-dialog input[type="text"] {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #E0E0E0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+.mij-dialog select:focus,
+.mij-dialog input[type="text"]:focus {
+    border-bottom-color: #FF5722;
+}
+
+/* ============================================================
+   ICON BUTTONS (compact, no text)
+   ============================================================ */
+.mij-icon-btn {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: #757575;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0;
+    text-decoration: none;
+    vertical-align: middle;
+}
+.mij-icon-btn:hover {
+    background: #F5F5F5;
+    color: #212121;
+    text-decoration: none;
+}
+.mij-icon-btn:active {
+    background: #E0E0E0;
+}
+
+/* ============================================================
+   CARD ICON ACTIONS (replaces text links on cards)
+   ============================================================ */
+.mij-card-icon-actions {
+    display: block;
+    padding: 4px 8px 8px;
+    text-align: right;
+}
+
+/* ============================================================
+   PLAYLIST CARD: cover + song count
+   ============================================================ */
+.mij-card-cover-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ============================================================
+   TABLE ICON ACTIONS
+   ============================================================ */
+.mij-table-actions {
+    white-space: nowrap;
+}
+.mij-table-actions form {
+    display: inline;
+}
+
+/* ============================================================
+   QUEUE: track title column
+   ============================================================ */
+.mij-queue-track-title {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

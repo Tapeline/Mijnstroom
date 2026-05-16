@@ -6,40 +6,91 @@
 <h1 class="mij-page-title">Playlists</h1>
 {% if error %}<p class="mij-error">{{ error }}</p>{% endif %}
 
-<form class="mij-form" method="post" action="/playlists" style="max-width:520px">
-  <div class="mij-form-row">
-    <label>New playlist</label>
-    <input type="text" name="name" placeholder="e.g. Driving mix">
-  </div>
-  <div class="mij-form-actions">
-    <button class="mij-btn" type="submit">Create</button>
-  </div>
-</form>
-
 {% if playlists %}
-<h2 class="mij-section-title">Your playlists</h2>
 <div class="mij-card-grid">
   {% for p in playlists %}
   <div class="mij-card-cell">
-    <a class="mij-card" href="/playlists/{{ p.id }}">
-      <div class="mij-card-cover">
-        <span class="mij-card-cover-letter">{{ (p.name[:1] or '?')|upper }}</span>
-      </div>
-      <div class="mij-card-body">
-        <div class="mij-card-title">{{ p.name }}</div>
-        <div class="mij-card-subtitle">Created {{ p.created_at.strftime('%Y-%m-%d') }}</div>
-      </div>
-    </a>
-    <div class="mij-card-actions">
-      <a href="/playlists/{{ p.id }}">Open</a>
-      <a href="/playlists/{{ p.id }}/delete"
-         data-confirm="Delete playlist?"
-         onclick="return confirm('Delete playlist?');">Delete</a>
+    <div class="mij-card">
+      <a href="/playlists/{{ p.id }}">
+        <div class="mij-card-cover">
+          {% if p.first_track_cover_url %}
+          <img src="{{ p.first_track_cover_url }}" alt="">
+          {% else %}
+          <span class="mij-card-cover-letter">{{ (p.name[:1] or '?')|upper }}</span>
+          {% endif %}
+        </div>
+        <div class="mij-card-body">
+          <div class="mij-card-title">{{ p.name }}</div>
+          <div class="mij-card-subtitle">{{ p.track_count }} track{% if p.track_count != 1 %}s{% endif %}</div>
+        </div>
+      </a>
     </div>
   </div>
   {% endfor %}
 </div>
 {% else %}
-<p class="mij-muted">No playlists yet.</p>
+<p class="mij-muted">No playlists yet. Tap the + button to create one.</p>
 {% endif %}
+{% endblock %}
+
+{% block fab %}
+<a class="mij-fab" href="javascript:void(0)" id="playlists-create-fab" title="New playlist">&#43;</a>
+
+<script type="text/javascript">
+(function() {
+    var fab = document.getElementById('playlists-create-fab');
+    if (!fab) return;
+    
+    bind(fab, 'click', function(ev) {
+        ev = ev || window.event;
+        if (ev.preventDefault) ev.preventDefault(); else ev.returnValue = false;
+        
+        window.openDialog(
+            'New playlist',
+            '<input type="text" id="dlg-playlist-name" placeholder="e.g. Driving mix" style="width:100%; padding:8px 0; border:none; border-bottom:1px solid #E0E0E0; font-family:inherit; font-size:14px; outline:none;">',
+            '<button class="mij-btn mij-btn-flat" id="dlg-cancel-btn">Cancel</button>' +
+            '<button class="mij-btn mij-btn-primary" id="dlg-create-pl-btn">Create</button>'
+        );
+        
+        setTimeout(function() {
+            var input = document.getElementById('dlg-playlist-name');
+            var createBtn = document.getElementById('dlg-create-pl-btn');
+            var cancelBtn = document.getElementById('dlg-cancel-btn');
+            
+            if (input) {
+                input.focus();
+                bind(input, 'keydown', function(e) {
+                    e = e || window.event;
+                    if (e.keyCode === 13 && createBtn) createBtn.click();
+                });
+            }
+            
+            if (cancelBtn) {
+                bind(cancelBtn, 'click', function() {
+                    window.closeDialog();
+                });
+            }
+            
+            if (createBtn) {
+                bind(createBtn, 'click', function() {
+                    if (!input) return;
+                    var name = input.value.replace(/^\s+|\s+$/g, '');
+                    if (!name) return;
+                    
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/playlists';
+                    var hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'name';
+                    hidden.value = name;
+                    form.appendChild(hidden);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+        }, 50);
+    });
+})();
+</script>
 {% endblock %}

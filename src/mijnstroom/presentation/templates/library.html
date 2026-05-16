@@ -3,7 +3,7 @@
 {% block title %}Library — Mijnstroom{% endblock %}
 
 {% block extra_js %}
-<script id="mij-queue-data" type="application/json">[
+<script type="application/json" id="mij-queue-data">[
 {% for t in tracks %}
 {"url":"/track/{{ t.id }}/stream","title":"{{ t.title|e }}","artist":"{{ t.artist|e }}","cover":"{% if t.has_cover %}/track/{{ t.id }}/cover{% endif %}"}{% if not loop.last %},{% endif %}
 {% endfor %}
@@ -40,7 +40,7 @@
            {% if t.has_cover %}data-cover="/track/{{ t.id }}/cover"{% endif %}
            title="Play">&#9654;</a>
       </div>
-      <a href="/track/{{ t.id }}" data-no-fade="false">
+      <a href="/track/{{ t.id }}">
         <div class="mij-card-body">
           <div class="mij-card-title">{{ t.title }}</div>
           <div class="mij-card-subtitle">{{ t.artist }}{% if t.album and t.album != '-' %} &middot; {{ t.album }}{% endif %}</div>
@@ -49,17 +49,65 @@
       <div class="mij-card-actions">
         <a href="/track/{{ t.id }}/download">Download</a>
         <a href="/track/{{ t.id }}/edit">Edit</a>
-        <a href="/track/{{ t.id }}/delete" data-confirm="Delete this track?" onclick="return confirm('Delete this track?');">Delete</a>
+        <a href="/track/{{ t.id }}/delete" data-confirm="Delete this track?">Delete</a>
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
 {% else %}
-<p class="mij-muted">No tracks yet.{% if not query %} Try <a href="/upload">uploading</a> a file or <a href="/youtube">downloading from YouTube</a>.{% endif %}</p>
+<p class="mij-muted">No tracks yet. Try <a href="/upload">uploading</a> a file or <a href="/youtube">downloading from YouTube</a>.</p>
 {% endif %}
 {% endblock %}
 
 {% block fab %}
-<a class="mij-fab" href="/upload" title="Upload">&#43;</a>
+<div class="mij-fab-container" id="library-fab">
+  <div class="mij-fab-options" id="mij-fab-options">
+    <a class="mij-fab-option" href="/youtube">YouTube</a>
+    <a class="mij-fab-option" href="/upload">Upload file</a>
+  </div>
+  <a class="mij-fab" href="javascript:void(0)" id="mij-fab-main" title="Add">&#43;</a>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var fabOpen = false;
+    var fabMain = document.getElementById('mij-fab-main');
+    var fabOptions = document.getElementById('mij-fab-options');
+    
+    if (!fabMain || !fabOptions) return;
+    
+    bind(fabMain, 'click', function(ev) {
+        ev = ev || window.event;
+        if (ev.preventDefault) ev.preventDefault(); else ev.returnValue = false;
+        
+        if (fabOpen) {
+            fabOptions.className = 'mij-fab-options';
+            fabOpen = false;
+        } else {
+            fabOptions.className = 'mij-fab-options is-open';
+            fabOpen = true;
+        }
+    });
+    
+    // Close FAB dial when clicking outside
+    bind(document.body, 'click', function(ev) {
+        ev = ev || window.event;
+        var target = ev.target || ev.srcElement;
+        
+        if (!fabOpen) return;
+        if (target === fabMain) return;
+        
+        // Check if click is inside options
+        var parent = target;
+        while (parent) {
+            if (parent === fabOptions) return;
+            parent = parent.parentNode;
+        }
+        
+        fabOptions.className = 'mij-fab-options';
+        fabOpen = false;
+    });
+})();
+</script>
 {% endblock %}

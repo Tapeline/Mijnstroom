@@ -32,12 +32,14 @@
   </div>
 </div>
 
-<table class="mij-prepare-table" style="max-width:600px">
+<div class="mij-table-scroll">
+<table class="mij-prepare-table">
   <tr><td style="width:140px"><strong>Format</strong></td><td>{{ track.format.value|upper }}</td></tr>
   {% if track.genre %}<tr><td><strong>Genre</strong></td><td>{{ track.genre }}</td></tr>{% endif %}
   {% if track.year %}<tr><td><strong>Year</strong></td><td>{{ track.year }}</td></tr>{% endif %}
   <tr><td><strong>Duration</strong></td><td>{{ duration }}</td></tr>
 </table>
+</div>
 
 {% if track.lyrics %}
 <h2 class="mij-section-title">Lyrics</h2>

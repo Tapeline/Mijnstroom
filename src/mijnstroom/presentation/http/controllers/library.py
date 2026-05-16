@@ -1,6 +1,6 @@
 from dishka.integrations.litestar import FromDishka, inject
 from litestar import Controller, Request, get
-from litestar.response import Template
+from litestar.response import Response, Template
 
 from mijnstroom.application.interfaces.repos import TrackQuery
 from mijnstroom.application.tracks.list_tracks import ListTracks
@@ -11,8 +11,7 @@ class LibraryController(Controller):
     path = "/"
 
     @get("/")
-    async def index(self) -> Template:
-        # Plain redirect via Template? We instead use a simple Redirect.
+    async def index(self) -> Response[str]:
         from litestar.response import Redirect
 
         return Redirect(path="/library")  # type: ignore[return-value]

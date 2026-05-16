@@ -2,6 +2,9 @@
 {% set active = 'queue' %}
 {% block title %}Queue — Mijnstroom{% endblock %}
 
+{% block content %}
+<h1 class="mij-page-title">Download queue</h1>
+
 {% macro section(label, status_class, jobs, show_cancel=False, show_delete=False) %}
 <div class="mij-queue-section">
   <h2 class="mij-queue-section-header">
@@ -9,25 +12,27 @@
   </h2>
   {% if jobs %}
   <div class="mij-list">
+  <div class="mij-table-scroll">
   <table>
-  <thead><tr><th>Kind</th><th>Status</th><th>Attempts</th><th>Created</th><th>Next run</th><th>Error</th><th></th></tr></thead>
+  <thead><tr><th>Track/URL</th><th>Kind</th><th>Status</th><th>Attempts</th><th>Created</th><th>Next run</th><th>Error</th><th></th></tr></thead>
   <tbody>
-  {% for j in jobs %}
+  {% for row in jobs %}
   <tr>
-    <td>{{ j.kind.value }}</td>
-    <td><span class="mij-status-pill {{ status_class }}">{{ j.status.value }}</span></td>
-    <td>{{ j.attempts }}</td>
-    <td>{{ j.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-    <td>{{ j.next_run_at.strftime('%Y-%m-%d %H:%M') }}</td>
-    <td>{% if j.error %}<span class="mij-error">{{ j.error }}</span>{% else %}-{% endif %}</td>
+    <td>{{ row.track_title or '-' }}</td>
+    <td>{{ row.job.kind.value }}</td>
+    <td><span class="mij-status-pill {{ status_class }}">{{ row.job.status.value }}</span></td>
+    <td>{{ row.job.attempts }}</td>
+    <td>{{ row.job.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ row.job.next_run_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{% if row.job.error %}<span class="mij-error">{{ row.job.error }}</span>{% else %}-{% endif %}</td>
     <td class="mij-actions">
       {% if show_cancel %}
-      <form method="post" action="/queue/{{ j.id }}/cancel" style="display:inline">
+      <form method="post" action="/queue/{{ row.job.id }}/cancel" style="display:inline">
         <button class="mij-btn mij-btn-flat" type="submit">Cancel</button>
       </form>
       {% endif %}
       {% if show_delete %}
-      <form method="post" action="/queue/{{ j.id }}/delete" style="display:inline">
+      <form method="post" action="/queue/{{ row.job.id }}/delete" style="display:inline">
         <button class="mij-btn mij-btn-flat" type="submit">Delete</button>
       </form>
       {% endif %}
@@ -37,14 +42,13 @@
   </tbody>
   </table>
   </div>
+  </div>
   {% else %}
   <p class="mij-muted">None.</p>
   {% endif %}
 </div>
 {% endmacro %}
 
-{% block content %}
-<h1 class="mij-page-title">Download queue</h1>
 {{ section('Pending',   'mij-status-pending',   grouped.pending,   show_cancel=True) }}
 {{ section('Running',   'mij-status-running',   grouped.running) }}
 {{ section('Failed',    'mij-status-failed',    grouped.failed,    show_delete=True) }}
