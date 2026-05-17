@@ -69,6 +69,7 @@ from mijnstroom.infrastructure.audio.ffprobe import FfprobeAudioProbe
 from mijnstroom.infrastructure.auth.oidc_client import OIDCClient
 from mijnstroom.infrastructure.auth.session import SessionCodec
 from mijnstroom.infrastructure.auth.session_idp import (
+    GuestIdProvider,
     SessionIdProvider,
     SystemUserIdProvider,
 )
@@ -208,10 +209,13 @@ class RequestProvider(Provider):
     @provide
     def user_id_provider(
         self,
+        config: Config,
         request: Request,  # type: ignore[type-arg]  # Dishka resolves by exact unparameterized type
         codec: SessionCodec,
         oidc: OIDCConfig,
     ) -> UserIdProvider:
+        if not config.auth_enabled:
+            return GuestIdProvider()
         return SessionIdProvider(request, codec, oidc)
 
 

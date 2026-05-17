@@ -201,8 +201,8 @@ img { max-width: 100%; height: auto; border: 0; vertical-align: middle; }
 
 .mij-content {
     padding: 24px;
-    max-width: 1280px;
-    margin: 0 auto;
+    /*max-width: 1280px;*/
+    margin: 0 24px;
 }
 
 .mij-page-title {
@@ -277,10 +277,12 @@ img { max-width: 100%; height: auto; border: 0; vertical-align: middle; }
                 transition: box-shadow 0.18s ease, transform 0.18s ease;
     }
     .mij-card:hover {
-        -webkit-box-shadow: 0 8px 17px rgba(0,0,0,0.25),
-                             0 6px 6px rgba(0,0,0,0.22);
-                box-shadow: 0 8px 17px rgba(0,0,0,0.25),
-                             0 6px 6px rgba(0,0,0,0.22);
+        /*-webkit-box-shadow: 0 8px 17px rgba(0,0,0,0.25),*/
+        /*                     0 6px 6px rgba(0,0,0,0.22);*/
+        /*        box-shadow: 0 8px 17px rgba(0,0,0,0.25),*/
+        /*                     0 6px 6px rgba(0,0,0,0.22);*/
+        -webkit-box-shadow: 0 8px 8px rgba(0,0,0,0.22);
+        box-shadow: 0 8px 8px rgba(0,0,0,0.22);
         -webkit-transform: translateY(-2px);
             -ms-transform: translateY(-2px);
                 transform: translateY(-2px);
@@ -317,7 +319,7 @@ img { max-width: 100%; height: auto; border: 0; vertical-align: middle; }
     font-weight: 300;
     text-align: center;
     line-height: 0;        /* legacy: use padding instead */
-    padding-top: 40%;
+    padding-top: 50%;
     overflow: hidden;      /* prevent text from overflowing */
     pointer-events: none;  /* allow clicks through to card */
 }
@@ -874,9 +876,9 @@ textarea {
 }
 @media screen and (min-width: 768px) {
     .mij-track-hero {
-        margin-left: -264px;  /* extend to left edge (sidebar width + page margin) */
-        margin-right: -24px;
-        padding-left: 264px;
+        margin-left: -48px;  /* extend to left edge (sidebar width + page margin) */
+        margin-right: -48px;
+        padding-left: 48px;
     }
 }
 @media screen and (max-width: 768px) {
@@ -901,7 +903,6 @@ textarea {
 .mij-track-hero-cover .mij-card-cover-letter {
     /* Override card-cover-letter for hero usage */
     font-size: 72px;
-    padding-top: 35%;
 }
 .mij-track-hero-info { overflow: hidden; padding-top: 28px; }
 .mij-track-hero-eyebrow {

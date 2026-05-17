@@ -10,6 +10,10 @@ http:
   host: 0.0.0.0
   port: 8000
 
+# Set to false to disable authentication entirely.
+# All requests will be served as a "guest" user without login.
+auth_enabled: true
+
 # ---------------------------------------------------------------------------
 # PRODUCTION (HTTPS, public hostname behind your reverse proxy)
 # ---------------------------------------------------------------------------

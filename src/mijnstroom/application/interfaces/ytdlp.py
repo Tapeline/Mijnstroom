@@ -65,3 +65,7 @@ class YoutubeClient(Protocol):
     @abstractmethod
     async def download_audio(self, url: str, dest_path: str) -> str:
         """Download best audio; return the resulting file path (may differ)."""
+
+    @abstractmethod
+    async def try_download_cover(self, url: str, dest_path: str) -> str | None:
+        ...

@@ -143,6 +143,7 @@ function fetchPage(url, isPopstate) {
     var contentEl = $('#mij-spa-content');
     var fabEl = $('#mij-spa-fab');
     var scriptsEl = $('#mij-spa-scripts');
+    var topbarEl = $('#mij-spa-topbar');
     if (!contentEl) {
         window.location.href = url;
         return;
@@ -162,6 +163,8 @@ function fetchPage(url, isPopstate) {
         if (xhr.status >= 200 && xhr.status < 400) {
             var html = xhr.responseText;
             var parts = extractSpaParts(html);
+            console.log(topbarEl);
+            console.log(parts);
             if (parts) {
                 contentEl.innerHTML = parts.content;
                 if (fabEl) {
@@ -172,12 +175,15 @@ function fetchPage(url, isPopstate) {
                     scriptsEl.innerHTML = parts.scripts;
                     executeScripts(scriptsEl);
                 }
+                if (topbarEl) {
+                    topbarEl.innerHTML = parts.topbar;
+                    executeScripts(topbarEl);
+                }
                 updateSidebarActive();
                 var title = extractTitle(html);
                 if (title) document.title = title;
                 reinitPage();
             } else {
-                // Fallback: full page load
                 window.location.href = url;
             }
         } else {
@@ -216,13 +222,13 @@ function extractSpaParts(html) {
     var content = extractBetween(html, '<div class="mij-content" id="mij-spa-content">', '</div>');
     var fab = extractBetween(html, '<div id="mij-spa-fab">', '</div>');
     var scripts = extractBetween(html, '<div id="mij-spa-scripts">', '</div>');
-    
+    var topbar = extractBetween(html, '<div class="mij-topbar" id="mij-spa-topbar">', '</div>');
     if (!content) return null;
-    
     return {
         content: content || '',
         fab: fab || '',
-        scripts: scripts || ''
+        scripts: scripts || '',
+        topbar: topbar || '',
     };
 }
 

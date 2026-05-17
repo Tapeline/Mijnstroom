@@ -13,12 +13,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}Mijnstroom{% endblock %}</title>
 <link rel="stylesheet" type="text/css" href="/static/style.css">
+<script type="text/javascript" src="/static/enhance.js"></script>
 {% block head %}{% endblock %}
 </head>
 <body>
 
 {# ===== Top bar ===== #}
-<div class="mij-topbar">
+<div class="mij-topbar" id="mij-spa-topbar">
   <div class="mij-topbar-inner">
     <button class="mij-topbar-menu" id="mij-menu-btn" type="button" title="Menu">&#9776;</button>
     <a class="mij-topbar-brand" href="/library">Mijnstroom</a>
@@ -130,7 +131,6 @@
 </div>
 
 {# Modern enhancements. type="text/javascript" for ES3 compat. #}
-<script type="text/javascript" src="/static/enhance.js"></script>
 
 {# Per-page scripts (SPA-replaced) #}
 <div id="mij-spa-scripts">

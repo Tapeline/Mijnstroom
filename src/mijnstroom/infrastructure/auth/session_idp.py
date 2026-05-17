@@ -34,6 +34,16 @@ class SessionIdProvider(UserIdProvider):
         return user
 
 
+class GuestIdProvider(UserIdProvider):
+    """Identity provider used when auth is disabled: always returns 'guest'."""
+
+    async def current_user(self) -> UserId | None:
+        return UserId("guest")
+
+    async def require_user(self) -> UserId:
+        return UserId("guest")
+
+
 class SystemUserIdProvider(UserIdProvider):
     """Identity provider used in worker scope: always returns the configured user."""
 

@@ -194,3 +194,23 @@ class YtDlpYoutubeClient(YoutubeClient):
             return await asyncio.to_thread(_do)
         except Exception as exc:
             raise YoutubeClientError(f"yt-dlp download failed: {exc}") from exc
+
+    async def try_download_cover(self, url: str, dest_path: str) -> str | None:
+        def _do() -> str:
+            outtmpl = dest_path + ".%(ext)s"
+            opts = self._options(
+                skip_download=True,
+                outtmpl=outtmpl,
+                writethumbnail=True,
+            )
+            with YoutubeDL(opts) as ydl:
+                info = ydl.extract_info(url, download=True)
+                if not isinstance(info, dict):
+                    raise YoutubeClientError("yt-dlp returned no info for download")
+                # WRITE HERE
+                return cast(str, filename)
+        try:
+            return await asyncio.to_thread(_do)
+        except Exception as exc:
+            print(exc)
+            return None

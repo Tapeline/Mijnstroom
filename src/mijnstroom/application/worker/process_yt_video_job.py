@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import shutil
 from typing import Any
 
 from mijnstroom.application.interfaces.audio import (
@@ -82,19 +83,24 @@ class ProcessYtVideoJob:
         incoming_dir = self.storage.incoming_dir()
         tmp_prefix = os.path.join(incoming_dir, f"yt-{job.id}")
         downloaded = await self.client.download_audio(url, tmp_prefix)
+        maybe_cover = None #await self.client.try_download_cover(url, tmp_prefix)
         try:
             for piece in pieces_raw:
                 if not isinstance(piece, dict):
                     continue
-                await self._save_piece(downloaded, piece)
+                await self._save_piece(downloaded, maybe_cover, piece)
         finally:
             if os.path.exists(downloaded):
                 import contextlib
 
                 with contextlib.suppress(OSError):
                     os.remove(downloaded)
+                    if maybe_cover:
+                        os.remove(maybe_cover)
 
-    async def _save_piece(self, source_path: str, piece: dict[str, Any]) -> None:
+    async def _save_piece(
+        self, source_path: str, maybe_cover: str | None, piece: dict[str, Any]
+    ) -> None:
         title = str(piece.get("title") or "").strip()
         if not title:
             raise AppError("Piece title cannot be blank")
@@ -113,6 +119,13 @@ class ProcessYtVideoJob:
         # Probe the saved file to compute duration; the converter may have
         # picked an exact value but we keep it accurate.
         probed = await self.probe.probe(dest)
+        if maybe_cover:
+            cover_path = os.path.join(
+                self.storage.covers_dir(),
+                f"{track_id}." + maybe_cover.rsplit(".", 1)[-1]
+            )
+        else:
+            cover_path = None
         track = Track(
             id=track_id,
             storage_path=dest,
@@ -123,7 +136,7 @@ class ProcessYtVideoJob:
             album=_opt_str(piece.get("album")),
             year=_opt_int(piece.get("year")),
             genre=_opt_str(piece.get("genre")),
-            cover_path=None,
+            cover_path=cover_path,
             lyrics=None,
             created_at=self.clock.now(),
         )
@@ -134,9 +147,14 @@ class ProcessYtVideoJob:
             album=track.album,
             year=track.year,
             genre=track.genre,
-            cover_path=None,
+            cover_path=cover_path,
             lyrics=None,
         )
+        if cover_path:
+            shutil.copy(
+                maybe_cover,
+                cover_path
+            )
         async with self.tx:
             await self.repo.insert(track)
 

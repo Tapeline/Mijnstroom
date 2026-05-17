@@ -19,7 +19,7 @@ oidc:
   client_secret: cND32pLkudXtDf07d1-Bn3yHEzvUIhqEXeGbV7QoRHV4teOzNuWVw.T4mpxr_0HCT3LkfxpI         # the plaintext; Authelia stores the pbkdf2 hash
   redirect_uri: http://localhost:8000/auth/callback
   allowed_sub: 6b7a3083-e672-4279-9831-4465a4b81cef   # the user's stable Authelia sub
-
+auth_enabled: false
 # ---------------------------------------------------------------------------
 # DEV / TEST (http://localhost only -- Authelia accepts loopback non-TLS)
 # ---------------------------------------------------------------------------

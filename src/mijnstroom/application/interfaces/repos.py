@@ -79,6 +79,12 @@ class PlaylistRepo(Protocol):
     @abstractmethod
     async def list_tracks(self, id: PlaylistId) -> list[TrackId]: ...
 
+    #@abstractmethod
+    #async def list_with_track_membership(self, track_id: TrackId) -> list[tuple[Playlist, bool]]: ...
+
+    #@abstractmethod
+    #async def toggle_track(self, id: PlaylistId, track_id: TrackId, add: bool) -> None: ...
+
 
 class JobRepo(Protocol):
     @abstractmethod

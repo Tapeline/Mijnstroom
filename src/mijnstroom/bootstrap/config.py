@@ -53,6 +53,7 @@ class Config:
     queue: QueueConfig = field(default_factory=QueueConfig)
     audio: AudioConfig = field(default_factory=AudioConfig)
     session: SessionConfig = field(default_factory=SessionConfig)
+    auth_enabled: bool = True
 
 
 def load_config(path: str) -> Config:  # pragma: no cover

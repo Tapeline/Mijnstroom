@@ -97,10 +97,10 @@
     <p class="mij-track-hero-subtitle">{{ tracks|length }} track{% if tracks|length != 1 %}s{% endif %}</p>
     <div class="mij-track-hero-actions">
       {% if tracks %}
-      <button class="mij-btn" id="pl-play-all-btn" type="button">&#9654; Play all</button>
+      <a class="mij-btn" id="pl-play-all-btn" type="button">&#9654; Play all</a>
       {% endif %}
-      <button class="mij-btn mij-btn-flat" id="pl-rename-btn" type="button">Rename</button>
-      <a class="mij-btn mij-btn-flat" id="pl-delete-btn" href="/playlists/{{ playlist.id }}/delete">Delete</a>
+      <a class="mij-btn mij-btn-flat" id="pl-rename-btn" type="button">Rename</a>
+      <a class="mij-btn mij-btn-flat" id="pl-delete-btn" type="button">Delete</a>
     </div>
   </div>
 </div>
@@ -146,18 +146,4 @@
 <p class="mij-muted">This playlist is empty.</p>
 {% endif %}
 
-<h2 class="mij-section-title">Add a track</h2>
-<form class="mij-form" method="post" action="/playlists/{{ playlist.id }}/add">
-  <div class="mij-form-row">
-    <label>Track</label>
-    <select name="track_id">
-      {% for t in all_tracks %}
-      <option value="{{ t.id }}">{{ t.title }}{% if t.artist %} — {{ t.artist }}{% endif %}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="mij-form-actions">
-    <button class="mij-btn" type="submit">Add</button>
-  </div>
-</form>
 {% endblock %}

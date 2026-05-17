@@ -1,7 +1,7 @@
 from dishka import AsyncContainer
 from litestar.types import ASGIApp, Receive, Scope, Send
 
-from mijnstroom.bootstrap.config import OIDCConfig
+from mijnstroom.bootstrap.config import Config, OIDCConfig
 from mijnstroom.infrastructure.auth.session import SESSION_COOKIE_NAME, SessionCodec
 
 _PUBLIC_PREFIXES: tuple[str, ...] = ("/auth/", "/static/", "/healthz")
@@ -33,6 +33,9 @@ def auth_middleware(app: ASGIApp) -> ASGIApp:
 
     Runs *before* Litestar's routing/exception middleware so unauth
     requests for unknown paths are still redirected to login.
+
+    When ``auth_enabled`` is False in config, all requests are allowed
+    through without authentication (guest mode).
     """
 
     async def middleware(scope: Scope, receive: Receive, send: Send) -> None:
@@ -45,6 +48,14 @@ def auth_middleware(app: ASGIApp) -> ASGIApp:
             return
 
         container: AsyncContainer = scope["app"].state.dishka_container
+        async with container() as request_container:
+            config = await request_container.get(Config)
+
+        # If auth is disabled, allow all requests through.
+        if not config.auth_enabled:
+            await app(scope, receive, send)
+            return
+
         async with container() as request_container:
             codec = await request_container.get(SessionCodec)
             oidc_config = await request_container.get(OIDCConfig)
