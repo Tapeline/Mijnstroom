@@ -7,14 +7,13 @@ requires-python = ">=3.13"
 dependencies = [
     "litestar[jinja]>=2.12",
     "uvicorn[standard]>=0.30",
-    "aiosqlite>=0.20",
     "dishka>=1.4",
-    "joserfc>=1.0",
     "itsdangerous>=2.2",
     "httpx>=0.27",
     "yt-dlp>=2024.8.6",
     "dature[yaml]>=0.1",
     "python-multipart>=0.0.9",
+    "prefect>=3.7.7",
 ]
 
 [project.scripts]
@@ -35,22 +34,3 @@ dev = [
     "mypy>=1.11",
     "httpx>=0.27",
 ]
-
-[tool.ruff]
-line-length = 100
-target-version = "py313"
-
-[tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
-ignore = ["E501"]
-
-[tool.mypy]
-python_version = "3.13"
-strict = true
-packages = ["mijnstroom"]
-mypy_path = "src"
-
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-testpaths = ["tests"]
-pythonpath = ["src"]

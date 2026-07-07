@@ -1,8 +1,3 @@
-# Mijnstroom configuration.
-#
-# Two example sections are kept side-by-side; pick one and delete the
-# other when deploying.
-
 storage:
   data_dir: /data
 
@@ -10,41 +5,17 @@ http:
   host: 0.0.0.0
   port: 8000
 
-# Set to false to disable authentication entirely.
-# All requests will be served as a "guest" user without login.
-auth_enabled: true
-
-# ---------------------------------------------------------------------------
-# PRODUCTION (HTTPS, public hostname behind your reverse proxy)
-# ---------------------------------------------------------------------------
-oidc:
-  issuer: https://auth.example.com
-  client_id: mijnstroom
-  client_secret: change-me-plaintext         # the plaintext; Authelia stores the pbkdf2 hash
-  redirect_uri: https://music.example.com/auth/callback
-  allowed_sub: 00000000-0000-0000-0000-000000000000   # the user's stable Authelia sub
-
-# ---------------------------------------------------------------------------
-# DEV / TEST (http://localhost only -- Authelia accepts loopback non-TLS)
-# ---------------------------------------------------------------------------
-# oidc:
-#   issuer: https://auth.dev.example.com
-#   client_id: mijnstroom-dev
-#   client_secret: dev-plaintext
-#   redirect_uri: http://localhost:8000/auth/callback
-#   allowed_sub: 00000000-0000-0000-0000-000000000000
-
 youtube:
   interval_seconds: 30
 
-queue:
-  poll_interval_seconds: 2
+app:
+  convert_to:
+    - codec: aac
+      kbps: 192
+    - codec: flac
+      kbps: 256
 
-audio:
-  default_format: aac
-  default_bitrate_kbps: 256
-
-session:
-  # 32+ random bytes; rotate to invalidate all sessions.
-  # Generate with:  openssl rand -hex 32
+security:
+  enable_auth: false
   secret: change-me
+  password: change-me
