@@ -1,16 +1,22 @@
 import json
 import os
+import shutil
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 from pathlib import Path
 import threading
+from typing import Any, Generator
 
 import adaptix
+from typing_extensions import ContextManager
 
-from mijnstroom.config import Config
+from mijnstroom.config import AudioFormat, Config
 from mijnstroom.data import Track, Playlist
+from mijnstroom.rwlock import RWLock
 
 
-class Storage:
-    def __init__(self, config: Config) -> None:
+class ReadAccessor:
+    def __init__(self, config: Config, lock: RWLock) -> None:
         data_dir = config.storage.data_dir_path
         self._track_file = data_dir / "tracks.json"
         self._playlist_file = data_dir / "playlists.json"
@@ -19,31 +25,19 @@ class Storage:
         self._covers_dir = data_dir / "covers"
         self._track_storage: dict[str, Track] = {}
         self._playlist_storage: dict[str, Playlist] = {}
-        self._lock = threading.Lock()
+        self._lock = lock
 
     def init(self) -> None:
-        for directory in (self._tmp_dir, self._audio_dir, self._covers_dir):
-            directory.mkdir(parents=True, exist_ok=True)
-        if not self._track_file.exists():
-            self.save_all_tracks({})
-        if not self._playlist_file.exists():
-            self.save_all_playlists({})
-
-    def save_all_tracks(self, tracks: dict[str, Track]) -> None:
-        with self._lock:
-            new_json = json.dumps(
-                adaptix.dump(tracks, dict[str, Track]), indent=2
+        if self._track_file.exists():
+            self._track_storage = adaptix.load(
+                json.loads(self._track_file.read_text()),
+                dict[str, Track]
             )
-            _safely_write(self._track_file, new_json)
-            self._track_storage = tracks
-
-    def save_all_playlists(self, playlists: dict[str, Playlist]) -> None:
-        with self._lock:
-            new_json = json.dumps(
-                adaptix.dump(playlists, dict[str, Playlist]), indent=2
+        if self._playlist_file.exists():
+            self._playlist_storage = adaptix.load(
+                json.loads(self._playlist_file.read_text()),
+                dict[str, Playlist]
             )
-            _safely_write(self._playlist_file, new_json)
-            self._playlist_storage = playlists
 
     @property
     def tracks(self) -> dict[str, Track]:
@@ -66,8 +60,84 @@ class Storage:
         return self._tmp_dir
 
 
+class ReadWriteAccessor(ReadAccessor):
+    def init(self) -> None:
+        for directory in (self._tmp_dir, self._audio_dir, self._covers_dir):
+            directory.mkdir(parents=True, exist_ok=True)
+        if not self._track_file.exists():
+            self.save_all_tracks({})
+        if not self._playlist_file.exists():
+            self.save_all_playlists({})
+        super().init()
+
+    def save_all_tracks(self, tracks: dict[str, Track]) -> None:
+        with self._lock.lock_for_write():
+            new_json = json.dumps(
+                adaptix.dump(tracks, dict[str, Track]), indent=2
+            )
+            _safely_write(self._track_file, new_json)
+            self._track_storage = tracks
+
+    def save_all_playlists(self, playlists: dict[str, Playlist]) -> None:
+        with self._lock.lock_for_write():
+            new_json = json.dumps(
+                adaptix.dump(playlists, dict[str, Playlist]), indent=2
+            )
+            _safely_write(self._playlist_file, new_json)
+            self._playlist_storage = playlists
+
+    def copy_track_file(
+        self,
+        from_path: Path,
+        uid: str,
+        fmt: AudioFormat
+    ) -> None:
+        shutil.copy2(
+            from_path,
+            self.audio_path / f"{uid}_{fmt.codec}{fmt.kbps}.{fmt.ext}"
+        )
+
+    def write_cover(self, uid: str, contents: bytes) -> None:
+        (self.covers_path / f"{uid}.png").write_bytes(contents)
+
+
+class LockedStorage:
+    def __init__(self, config: Config) -> None:
+        self._config = config
+        self._tmp_dir = config.storage.data_dir_path / "tmp"
+        self._lock = RWLock()
+
+    def init(self) -> None:
+        with self.for_update() as storage:
+            storage.init()
+
+    @contextmanager
+    def for_update(self) -> Iterator[ReadWriteAccessor]:
+        with self._lock.lock_for_write():
+            yield ReadWriteAccessor(self._config, self._lock)
+
+    @contextmanager
+    def for_select(self) -> Iterator[ReadAccessor]:
+        with self._lock.lock_for_read():
+            yield ReadAccessor(self._config, self._lock)
+
+    @contextmanager
+    def with_tmp_dir(self, uid: str) -> Iterator[Path]:
+        tmp_dir = self._tmp_dir / uid
+        if tmp_dir.exists():
+            shutil.rmtree(tmp_dir)
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            yield tmp_dir
+        finally:
+            shutil.rmtree(tmp_dir)
+
+    @property
+    def tmp_path(self) -> Path:
+        return self._tmp_dir
+
+
 def _safely_write(file: Path, text: str) -> None:
     tmp_file = file.with_name(f"{file.name}.tmp")
     tmp_file.write_text(text)
     os.replace(tmp_file, file)
-    tmp_file.unlink()

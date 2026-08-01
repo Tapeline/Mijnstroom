@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
@@ -23,17 +24,23 @@ class HttpConfig:
 @dataclass(frozen=True, slots=True)
 class YoutubeConfig:
     interval_seconds: int = 30
+    cookie_file: str = "data/cookiefile.txt"
 
 
 @dataclass(frozen=True, slots=True)
 class AudioFormat:
-    codec: str = "aac"
-    kbps: int = 256
+    codec: str
+    kbps: int
+    ext: str
 
 
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     convert_to: list[AudioFormat] = field(default_factory=list)
+
+    def __post_init__(self):
+        if not self.convert_to:
+            raise ValueError("Specify at least one format in app.covert_to")
 
 
 @dataclass(frozen=True, slots=True)

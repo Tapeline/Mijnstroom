@@ -14,7 +14,7 @@ class Track:
     title: str
     artist: str
     album: str
-    year: int
+    year: int | None
     genre: str
 
 

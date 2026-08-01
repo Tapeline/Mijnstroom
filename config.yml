@@ -1,5 +1,5 @@
 storage:
-  data_dir: /data
+  data_dir: data
 
 http:
   host: 0.0.0.0
@@ -10,10 +10,12 @@ youtube:
 
 app:
   convert_to:
-    - codec: aac
-      kbps: 192
     - codec: flac
       kbps: 256
+      ext: flac
+    - codec: aac
+      kbps: 192
+      ext: aac
 
 security:
   enable_auth: false

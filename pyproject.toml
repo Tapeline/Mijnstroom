@@ -10,10 +10,11 @@ dependencies = [
     "dishka>=1.4",
     "itsdangerous>=2.2",
     "httpx>=0.27",
-    "yt-dlp>=2024.8.6",
+    "yt-dlp[default]>=2024.8.6",
     "dature[yaml]>=0.1",
     "python-multipart>=0.0.9",
-    "prefect>=3.7.7",
+    "requests>=2.34.2",
+    "ytdlp-jsc>=0.1.7",
 ]
 
 [project.scripts]
