@@ -20,24 +20,7 @@ async def main():
     storage.init()
     registry = PipelineRegistry()
     yt = YT(config, storage.tmp_path)
-    url = "https://www.youtube.com/watch?v=CxhD0mvcED0"
-    #result = await PrepareYTVideo(yt)(PrepareYTVideoRequest(url))
-    #print(pprint.pformat(result))
-    await ImportYTVideoFlow(yt, registry, storage, config)(
-        ImportYTVideoRequest(
-            url,
-            override_artist="S.Vasilyev & M.Landa",
-            override_album="Smeshariki OST",
-            override_year=2010,
-            segments=[
-                ImportYTVideoSegment(
-                    from_second=1465,
-                    to_second=1647
-                )
-            ]
-        )
-    )
-    await asyncio.sleep(1000000)
+
 
 
 if __name__ == '__main__':

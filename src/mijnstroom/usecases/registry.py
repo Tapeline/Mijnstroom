@@ -5,6 +5,8 @@ import uuid
 from dataclasses import dataclass, replace
 from enum import Enum
 
+from mijnstroom.errors import NotFoundError
+
 
 class PipelineStatus(Enum):
     RUNNING = "running"
@@ -77,3 +79,22 @@ class Pipeline:
         self.registry.update_status(
             self.uid, PipelineStatus.FAILED, extended_status
         )
+
+
+@dataclass
+class SeeRunningJobs:
+    registry: PipelineRegistry
+
+    def __call__(self) -> list[RunningPipeline]:
+        return list(self.registry._pipelines.values())
+
+
+@dataclass
+class GetJobDetail:
+    registry: PipelineRegistry
+
+    def __call__(self, job_uid: str) -> RunningPipeline:
+        pipeline = self.registry.get_pipeline(job_uid)
+        if not pipeline:
+            raise NotFoundError("Job not found")
+        return pipeline

@@ -20,6 +20,7 @@ class Track:
 
 @dataclass(frozen=True, slots=True)
 class Playlist:
+    uid: str
     title: str
     artist: str
     year: int

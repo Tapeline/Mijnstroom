@@ -1,2 +1,6 @@
 class AppError(Exception):
-    """App error."""
+    ...
+
+
+class NotFoundError(AppError):
+    ...

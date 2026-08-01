@@ -7,6 +7,7 @@ from mijnstroom.data import Track
 from mijnstroom.errors import AppError
 from mijnstroom.media import coding, metadata
 from mijnstroom.media.coding import TimeRange
+from mijnstroom.media.covers import fit_cover_art
 from mijnstroom.media.yt import YT, YTVideoDetailed
 from mijnstroom.usecases.registry import Pipeline, PipelineRegistry
 from mijnstroom.storage import LockedStorage
@@ -88,6 +89,8 @@ class ImportYTVideoFlow(Pipeline):
 
             self.notify_running("Downloading thumbnail")
             thumb_bytes = self.yt.download_thumbnail(video.thumbnail_url)
+
+            self.notify_running("Arranging parts and cropping covers")
             parts = _make_parts(request, video, thumb_bytes)
 
             converted = []
@@ -178,7 +181,9 @@ class ImportYTVideoFlow(Pipeline):
 
 
 def _make_parts(
-    request: ImportYTVideoRequest, video: YTVideoDetailed, thumb: bytes
+    request: ImportYTVideoRequest,
+    video: YTVideoDetailed,
+    thumb: bytes | None
 ) -> list[_ConcreteSegment]:
     title = request.override_title or video.title
     artist = request.override_artist or video.channel
@@ -186,6 +191,8 @@ def _make_parts(
     year = request.override_album
     genre = request.override_album
     album_cover = thumb
+    if album_cover:
+        album_cover = fit_cover_art(album_cover)
     if not request.segments:
         return [_ConcreteSegment(
             from_second=0,
@@ -206,7 +213,11 @@ def _make_parts(
             album=seg.override_album or album,
             year=seg.override_year or year,
             genre=seg.override_genre or genre,
-            album_cover=seg.override_album_cover or album_cover,
+            album_cover=(
+                fit_cover_art(seg.override_album_cover)
+                if seg.override_album_cover
+                else album_cover
+            ),
         )
         for seg in request.segments
     ]
