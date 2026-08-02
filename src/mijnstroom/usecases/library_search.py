@@ -10,6 +10,7 @@ class SearchRequest:
     title_like: str | None = None
     artist_like: str | None = None
     album_like: str | None = None
+    include_unset: bool = False
 
 
 @dataclass
@@ -20,9 +21,22 @@ class SearchTracksInLibrary:
         with self.storage.for_select() as session:
             return [
                 track for track in session.tracks.values()
-                if _filter_like(track.title, request.title_like) and
-                   _filter_like(track.album, request.album_like) and
-                   _filter_like(track.artist, request.artist_like)
+                if
+                _filter_like(
+                    track.title,
+                    request.title_like,
+                    request.include_unset
+                ) and
+                _filter_like(
+                    track.album,
+                    request.album_like,
+                    request.include_unset
+                ) and
+                _filter_like(
+                    track.artist,
+                    request.artist_like,
+                    request.include_unset
+                )
             ]
 
 
@@ -34,9 +48,22 @@ class SearchPlaylistsInLibrary:
         with self.storage.for_select() as session:
             return [
                 playlist for playlist in session.playlists.values()
-                if _filter_like(playlist.title, request.title_like) and
-                   _filter_like(playlist.album, request.album_like) and
-                   _filter_like(playlist.artist, request.artist_like)
+                if
+                _filter_like(
+                    playlist.title,
+                    request.title_like,
+                    request.include_unset
+                ) and
+                _filter_like(
+                    playlist.album,
+                    request.album_like,
+                    request.include_unset
+                ) and
+                _filter_like(
+                    playlist.artist,
+                    request.artist_like,
+                    request.include_unset
+                )
             ]
 
 
@@ -64,9 +91,13 @@ class GetPlaylistInLibrary:
             return playlist
 
 
-def _filter_like(field: str | None, filter_like: str | None) -> bool:
+def _filter_like(
+    field: str | None,
+    filter_like: str | None,
+    include_unset: bool
+) -> bool:
     if field is None:
-        return False
+        return include_unset
     if filter_like is None:
         return True
     return filter_like in field

@@ -114,12 +114,16 @@ class LockedStorage:
     @contextmanager
     def for_update(self) -> Iterator[ReadWriteAccessor]:
         with self._lock.lock_for_write():
-            yield ReadWriteAccessor(self._config, self._lock)
+            accessor = ReadWriteAccessor(self._config, self._lock)
+            accessor.init()
+            yield accessor
 
     @contextmanager
     def for_select(self) -> Iterator[ReadAccessor]:
         with self._lock.lock_for_read():
-            yield ReadAccessor(self._config, self._lock)
+            accessor = ReadAccessor(self._config, self._lock)
+            accessor.init()
+            yield accessor
 
     @contextmanager
     def with_tmp_dir(self, uid: str) -> Iterator[Path]:

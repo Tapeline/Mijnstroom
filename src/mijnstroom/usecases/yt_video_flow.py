@@ -188,7 +188,7 @@ def _make_parts(
     title = request.override_title or video.title
     artist = request.override_artist or video.channel
     album = request.override_album
-    year = request.override_album
+    year = request.override_year or video.year
     genre = request.override_album
     album_cover = thumb
     if album_cover:

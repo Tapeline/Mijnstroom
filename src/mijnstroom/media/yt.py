@@ -77,6 +77,13 @@ class YTVideoDetailed(YTVideo):
     description: str
     timecodes: list[YTTimecode]
 
+    @property
+    def year(self) -> int | None:
+        try:
+            return int(self.upload_date[:4])
+        except ValueError:
+            return None
+
 
 @dataclass(frozen=True, slots=True)
 class YTPlaylist:
