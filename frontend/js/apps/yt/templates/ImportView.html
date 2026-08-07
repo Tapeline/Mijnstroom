@@ -1,0 +1,137 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <h4 class="mdl-typography--display-1">Import from YouTube</h4>
+    <p class="mdl-typography--body-1">Step 2: review and import.</p>
+    {{#if error}}<p style="color:#b71c1c">{{ error }}</p>{{/if}}
+    {{#if message}}<p style="color:#1b5e20">{{ message }}</p>{{/if}}
+  </div>
+
+  <div class="mdl-cell mdl-cell--4-col">
+    <img src="{{ video.thumbnail_url }}" alt="thumbnail" style="max-width:100%;border-radius:4px">
+  </div>
+  <div class="mdl-cell mdl-cell--8-col">
+    <h5 class="mdl-typography--headline">{{ video.title }}</h5>
+    <p><strong>Channel:</strong> {{ video.channel }}</p>
+    <p><strong>Upload date:</strong> {{ video.upload_date }}</p>
+    <p><strong>Duration:</strong> {{ video.duration_seconds }}s</p>
+    <p><a href="{{ video.url }}" target="_blank" data-bypass>{{ video.url }}</a></p>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col">
+    <form class="js-import-form">
+      <h6 class="mdl-typography--subhead">Overrides (whole video)</h6>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="override_title" id="ov-title">
+        <label class="mdl-textfield__label" for="ov-title">Override title</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="override_artist" id="ov-artist">
+        <label class="mdl-textfield__label" for="ov-artist">Override artist</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="override_album" id="ov-album">
+        <label class="mdl-textfield__label" for="ov-album">Override album</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="number" name="override_year" id="ov-year">
+        <label class="mdl-textfield__label" for="ov-year">Override year</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="override_genre" id="ov-genre">
+        <label class="mdl-textfield__label" for="ov-genre">Override genre</label>
+      </div>
+
+      <h6 class="mdl-typography--subhead">Segments</h6>
+      {{#if video.timecodes.length}}
+        <p class="mdl-typography--caption">Detected timecodes (click to add as segment):</p>
+        <ul class="mdl-list">
+          {{#each video.timecodes}}
+            <li class="mdl-list__item">
+              <span class="mdl-list__item-primary-content">
+                <code>{{ seconds }}s</code> — {{ label }}
+              </span>
+              <span class="mdl-list__item-secondary-action">
+                <button type="button"
+                        class="mdl-button mdl-js-button mdl-button--icon js-use-timecode"
+                        data-idx="{{ @index }}"
+                        title="Use as segment">
+                  <i class="material-icons">playlist_add</i>
+                </button>
+              </span>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+
+      <div id="segments-list">
+        {{#each segments}}
+        <div class="js-segment mdl-shadow--2dp" style="padding:8px;margin-bottom:8px">
+          <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--3-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="number" name="from_second" value="{{ from_second }}">
+                <label class="mdl-textfield__label">From (s)</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="number" name="to_second" value="{{ to_second }}">
+                <label class="mdl-textfield__label">To (s)</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col mdl-typography--right-align">
+              <button type="button" class="mdl-button mdl-js-button mdl-button--icon js-remove-segment" data-idx="{{ @index }}">
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" name="override_title" value="{{ override_title }}">
+                <label class="mdl-textfield__label">Override title</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" name="override_artist" value="{{ override_artist }}">
+                <label class="mdl-textfield__label">Override artist</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" name="override_album" value="{{ override_album }}">
+                <label class="mdl-textfield__label">Override album</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="number" name="override_year" value="{{ override_year }}">
+                <label class="mdl-textfield__label">Override year</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" name="override_genre" value="{{ override_genre }}">
+                <label class="mdl-textfield__label">Override genre</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--12-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" name="override_album_cover" value="{{ override_album_cover }}">
+                <label class="mdl-textfield__label">Override album cover URL</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <button type="button" class="mdl-button mdl-js-button mdl-button--raised js-add-segment">
+        <i class="material-icons">add</i>&nbsp;Add segment
+      </button>
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+              {{#if loading}}disabled{{/if}}>
+        {{#if loading}}Importing...{{else}}Import{{/if}}
+      </button>
+    </form>
+  </div>
+</div>

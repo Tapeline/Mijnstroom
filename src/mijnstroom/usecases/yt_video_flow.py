@@ -58,7 +58,10 @@ class ImportYTVideoRequest:
 class PrepareYTVideo:
     yt: YT
 
-    async def __call__(self, request: PrepareYTVideoRequest) -> YTVideoDetailed:
+    async def __call__(
+        self,
+        request: PrepareYTVideoRequest
+    ) -> YTVideoDetailed:
         video = await asyncio.to_thread(self.yt.get_video_info, request.url)
         if not video:
             raise AppError(f"Video {request.url} not found")
@@ -83,12 +86,16 @@ class ImportYTVideoFlow(Pipeline):
 
         self.notify_running("Downloading source video")
         with self.storage.with_tmp_dir(self.uid) as tmp_dir:
-            source_path = self.yt.download_best_video(
+            source_path = await asyncio.to_thread(
+                self.yt.download_best_video,
                 request.url, tmp_dir / "source_video"
             )
 
             self.notify_running("Downloading thumbnail")
-            thumb_bytes = self.yt.download_thumbnail(video.thumbnail_url)
+            thumb_bytes = await asyncio.to_thread(
+                self.yt.download_thumbnail,
+                video.thumbnail_url
+            )
 
             self.notify_running("Arranging parts and cropping covers")
             parts = _make_parts(request, video, thumb_bytes)
@@ -202,7 +209,7 @@ def _make_parts(
             album=album,
             year=year,
             genre=genre,
-            album_cover=thumb,
+            album_cover=album_cover,
         )]
     return [
         _ConcreteSegment(

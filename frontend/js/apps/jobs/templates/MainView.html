@@ -1,0 +1,28 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <h5 class="mdl-typography--headline">Jobs</h5>
+    {{#if error}}<p style="color:#b71c1c">{{ error }}</p>{{/if}}
+    {{#if jobs.length}}
+      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width:100%">
+        <thead>
+          <tr>
+            <th class="mdl-data-table__cell--non-numeric">Title</th>
+            <th class="mdl-data-table__cell--non-numeric">Status</th>
+            <th class="mdl-data-table__cell--non-numeric">Log entries</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each jobs}}
+          <tr>
+            <td class="mdl-data-table__cell--non-numeric">{{ title }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ status }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ log.length }}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p class="mdl-typography--body-1">No jobs.</p>
+    {{/if}}
+  </div>
+</div>

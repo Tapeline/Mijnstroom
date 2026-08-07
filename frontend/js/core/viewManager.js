@@ -44,6 +44,10 @@ define(function (require) {
 
 			$("#app").html(currentView.el);
 			currentView.render();
+
+			if (typeof window !== 'undefined' && window.componentHandler) {
+				window.componentHandler.upgradeDom();
+			}
 		}
 
 		return {

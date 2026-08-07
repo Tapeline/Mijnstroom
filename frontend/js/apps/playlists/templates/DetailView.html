@@ -1,0 +1,70 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    {{#if error}}<p style="color:#b71c1c">{{ error }}</p>{{/if}}
+    {{#if message}}<p style="color:#1b5e20">{{ message }}</p>{{/if}}
+    <h4 class="mdl-typography--display-1">{{ title }}</h4>
+    <p class="mdl-typography--caption">UID: <code>{{ uid }}</code></p>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title"><h2 class="mdl-card__title-text">Metadata</h2></div>
+    <div class="mdl-card__supporting-text">
+      <form class="js-meta-form">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" name="title" id="pl-title" value="{{ title }}">
+          <label class="mdl-textfield__label" for="pl-title">Title</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" name="artist" id="pl-artist" value="{{ artist }}">
+          <label class="mdl-textfield__label" for="pl-artist">Artist</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" name="genre" id="pl-genre" value="{{ genre }}">
+          <label class="mdl-textfield__label" for="pl-genre">Genre</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="number" name="year" id="pl-year" value="{{ year }}">
+          <label class="mdl-textfield__label" for="pl-year">Year</label>
+        </div>
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+          Save meta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title"><h2 class="mdl-card__title-text">Tracks ({{ tracks.length }})</h2></div>
+    <div class="mdl-card__supporting-text">
+      <ul class="mdl-list">
+        {{#each tracks}}
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <a href="#/tracks/{{ this }}"><code>{{ this }}</code></a>
+          </span>
+          <span class="mdl-list__item-secondary-action">
+            <button class="mdl-button mdl-button--icon js-remove-track" data-uid="{{ this }}">
+              <i class="material-icons">delete</i>
+            </button>
+          </span>
+        </li>
+        {{/each}}
+      </ul>
+
+      <form class="js-add-track">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" name="new-track" id="new-track">
+          <label class="mdl-textfield__label" for="new-track">Track UID to add</label>
+        </div>
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col">
+    <a class="mdl-button mdl-js-button mdl-button--raised" href="#/playlists">Back</a>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent js-delete">
+      Delete playlist
+    </button>
+  </div>
+</div>

@@ -1,30 +1,30 @@
 define(function (require) {
 	var Backbone = require('Backbone');
-	var template = require('hbs!./../../templates/PlaylistView');
+	var template = require('hbs!./../templates/DetailView');
 
 	return Backbone.View.extend({
-		tagName: 'div',
-		className: 'mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col',
-
 		template: template,
 
 		events: {
 			'click .js-delete': 'onDelete'
 		},
 
+		initialize: function (options) {
+			this.error = (options && options.error) || null;
+		},
+
 		render: function () {
 			var data = this.model.toJSON();
-			data.trackCount = (this.model.get('tracks') || []).length;
+			data.error = this.error;
 			this.$el.html(this.template(data));
 			return this;
 		},
 
 		onDelete: function (e) {
 			e.preventDefault();
-			if (!window.confirm('Delete this playlist?')) { return; }
-			var self = this;
+			if (!window.confirm('Delete this track?')) { return; }
 			this.model.delete().then(function () {
-				self.$el.remove();
+				window.location.hash = '#/tracks';
 			});
 		}
 	});

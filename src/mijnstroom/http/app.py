@@ -1,7 +1,7 @@
 from litestar import Litestar, Request, Response, Router
 from litestar.di import Provide
 from litestar.openapi import OpenAPIConfig
-from litestar.openapi.plugins import SwaggerRenderPlugin
+from litestar.openapi.plugins import SwaggerRenderPlugin, YamlRenderPlugin
 
 from mijnstroom.config import Config
 from mijnstroom.errors import AppError, NotFoundError
@@ -105,7 +105,7 @@ def create_app(container: AppContainer) -> Litestar:
             title="Mijnstroom",
             version="0.1.0",
             path="/docs",
-            render_plugins=[SwaggerRenderPlugin()]
+            render_plugins=[SwaggerRenderPlugin(), YamlRenderPlugin()]
         )
     )
     app.state.container = container

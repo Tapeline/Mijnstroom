@@ -15,7 +15,7 @@ app:
       ext: flac
     - codec: aac
       kbps: 192
-      ext: aac
+      ext: m4a
 
 security:
   enable_auth: false

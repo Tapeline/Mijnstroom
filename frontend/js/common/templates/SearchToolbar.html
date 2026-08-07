@@ -1,0 +1,27 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <form action="#">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input js-search" type="text" id="search-title" data-field="title"
+               value="{{ title }}">
+        <label class="mdl-textfield__label" for="search-title">Filter by title (press Enter)</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input js-search" type="text" id="search-artist" data-field="artist"
+               value="{{ artist }}">
+        <label class="mdl-textfield__label" for="search-artist">Filter by artist (press Enter)</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input js-search" type="text" id="search-album" data-field="album"
+               value="{{ album }}">
+        <label class="mdl-textfield__label" for="search-album">Filter by album (press Enter)</label>
+      </div>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="include-unset">
+        <input type="checkbox" id="include-unset" class="mdl-checkbox__input js-include-unset"
+               {{#if include_unset}}checked{{/if}}>
+        <span class="mdl-checkbox__label">Include unset metadata</span>
+      </label>
+      <button type="button" class="mdl-button mdl-js-button mdl-button--raised js-clear">Clear filters</button>
+    </form>
+  </div>
+</div>
