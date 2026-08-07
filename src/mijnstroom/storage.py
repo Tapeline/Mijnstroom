@@ -58,6 +58,15 @@ class ReadAccessor:
     @property
     def tmp_path(self) -> Path:
         return self._tmp_dir
+        
+    def list_formats(self, track_id: str) -> dict[str, Path]:
+        return [
+            path.name.split(".", maxsplit=1)[0].removeprefix(f"{track_id}_"): path
+            for path in self.audio_path.glob(f"{track_id}*")
+        ]
+    
+    def cover_for(self, track_id: str) -> Path:
+        return self.covers_path / f"{track_id}.png"
 
 
 class ReadWriteAccessor(ReadAccessor):

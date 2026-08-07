@@ -12,7 +12,8 @@ from mijnstroom.media.yt import YT
 from mijnstroom.storage import LockedStorage
 from mijnstroom.usecases.library_search import (
     GetPlaylistInLibrary, GetTrackInLibrary, SearchPlaylistsInLibrary,
-    SearchTracksInLibrary,
+    SearchTracksInLibrary, GetTrackFormatsInLibrary,
+    DownloadFileFromLibrary, GetCoverInLibrary
 )
 from mijnstroom.usecases.playlist_mgmt import (
     CreatePlaylistInLibrary,
@@ -72,6 +73,9 @@ def create_app(container: AppContainer) -> Litestar:
             endpoints.get_job,
             endpoints.prepare_yt_video,
             endpoints.import_yt_video,
+            endpoints.get_cover,
+            endpoints.get_track_formats,
+            endpoints.download_track,
         ],
         dependencies={
             "container": Provide(_provide_container),
@@ -92,6 +96,9 @@ def create_app(container: AppContainer) -> Litestar:
             "get_job": Provide(GetJobDetail),
             "prepare_yt_video": Provide(PrepareYTVideo),
             "import_yt_video": Provide(ImportYTVideoFlow),
+            "get_track_formats": Provide(GetTrackFormatsInLibrary),
+            "download_track": Provide(DownloadFileFromLibrary),
+            "get_cover": Provide(GetCoverInLibrary),
         },
     )
 

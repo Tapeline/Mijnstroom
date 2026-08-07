@@ -79,6 +79,46 @@ class GetTrackInLibrary:
             return track
 
 
+
+@dataclass
+class GetTrackFormatsInLibrary:
+    storage: LockedStorage
+
+    def __call__(self, uid: str) -> list[str]:
+        with self.storage.for_select() as session:
+            track = session.tracks.get(uid)
+            if not track:
+                raise NotFoundError("Track not found")
+            return list(session.list_formats(uid).keys())
+
+
+@dataclass
+class DownloadFileFromLibrary:
+    storage: LockedStorage
+
+    def __call__(self, uid: str, fmt: str) -> Path:
+        with self.storage.for_select() as session:
+            formats = session.list_formats(uid)
+            if fmt not in formats:
+                raise NotFoundError("Format not found")
+            return formats[fmt]
+
+
+@dataclass
+class GetCoverInLibrary:
+    storage: LockedStorage
+
+    def __call__(self, uid: str) -> Path:
+        with self.storage.for_select() as session:
+            track = session.tracks.get(uid)
+            if not track:
+                raise NotFoundError("Track not found")
+            cover = session.cover_for(uid)
+            if not cover.exists():
+                raise NotFoundError("No cover")
+            return cover
+
+
 @dataclass
 class GetPlaylistInLibrary:
     storage: LockedStorage

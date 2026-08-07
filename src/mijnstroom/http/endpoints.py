@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from litestar import MediaType, Response, get, post
 from litestar.di import NamedDependency
+from litestar.response import File
 
 from mijnstroom.data import Playlist, Track
 from mijnstroom.media.yt import YTVideoDetailed
@@ -11,6 +12,7 @@ from mijnstroom.usecases.library_search import (
     SearchPlaylistsInLibrary,
     SearchRequest,
     SearchTracksInLibrary,
+    GetCoverInLibrary
 )
 from mijnstroom.usecases.playlist_mgmt import (
     CreatePlaylistInLibrary,
@@ -62,6 +64,22 @@ async def search_tracks(
 @get("/tracks/{uid:str}")
 async def get_track(uid: str, get_track: GetTrackInLibrary) -> Track:
     return get_track(uid)
+    
+
+
+@get("/tracks/{uid:str}/formats")
+async def get_track_formats(uid: str, get_track_formats: GetTrackFormatsInLibrary) -> list[str]:
+    return get_track_formats(uid)
+
+
+@get("/tracks/{uid:str}/cover.png")
+async def get_cover(uid: str, get_cover: GetCoverInLibrary) -> File:
+    return File(get_cover(uid))
+
+
+@get("/tracks/{uid:str}/formats/{fmt:str}")
+async def download_track(uid: str, fmt: str, download_track: DownloadFileFromLibrary) -> File:
+    return File(download_track(uid, fmt))
 
 
 @get("/playlists")
