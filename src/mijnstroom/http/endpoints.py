@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 from litestar import MediaType, Response, get, post
 from litestar.di import NamedDependency
@@ -7,12 +8,12 @@ from litestar.response import File
 from mijnstroom.data import Playlist, Track
 from mijnstroom.media.yt import YTVideoDetailed
 from mijnstroom.usecases.library_search import (
-    GetPlaylistInLibrary,
-    GetTrackInLibrary,
+    DownloadFileFromLibrary, GetPlaylistInLibrary,
+    GetTrackFormatsInLibrary, GetTrackInLibrary,
     SearchPlaylistsInLibrary,
     SearchRequest,
     SearchTracksInLibrary,
-    GetCoverInLibrary
+    GetCoverInLibrary,
 )
 from mijnstroom.usecases.playlist_mgmt import (
     CreatePlaylistInLibrary,
@@ -79,7 +80,11 @@ async def get_cover(uid: str, get_cover: GetCoverInLibrary) -> File:
 
 @get("/tracks/{uid:str}/formats/{fmt:str}")
 async def download_track(uid: str, fmt: str, download_track: DownloadFileFromLibrary) -> File:
-    return File(download_track(uid, fmt))
+    path: Path = download_track(uid, fmt)
+    return File(
+        path,
+        filename=f"{uid}.{path.name.split('.')[-1]}"
+    )
 
 
 @get("/playlists")

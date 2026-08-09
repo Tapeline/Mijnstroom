@@ -14,6 +14,9 @@
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <div class="mdl-layout-spacer"></div>
+      <button id="logout-btn" class="mdl-button mdl-js-button mdl-button--icon" title="Logout" style="display:none">
+        <i class="material-icons">exit_to_app</i>
+      </button>
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
         <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
           <i class="material-icons">search</i>
@@ -47,5 +50,24 @@
 <!--<script src="https://backbonejs.org/backbone-min.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
 <script src="vendored/mdl/material.min.js"></script>
+<script>
+(function () {
+  var btn = document.getElementById('logout-btn');
+  // Show the button (it's hidden by default; if auth is disabled, cookie won't exist anyway)
+  btn.style.display = '';
+  btn.addEventListener('click', function () {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/auth/logout', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      window.location.href = '/login.html';
+    };
+    xhr.onerror = function () {
+      window.location.href = '/login.html';
+    };
+    xhr.send('{}');
+  });
+})();
+</script>
 </body>
 </html>

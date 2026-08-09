@@ -44,7 +44,15 @@ define(function (require) {
 			var track = new Track({ uid: uid });
 			track.fetch({
 				success: function () {
-					viewManager.show(new DetailView({ model: track }));
+          Backbone.ajax({
+            url: '/api/tracks/' + uid + "/formats",
+            type: 'GET',
+            success: function(data) {
+              track.set('formats', data);
+              console.log(track)
+					    viewManager.show(new DetailView({ model: track }));
+            }
+          });
 				},
 				error: function () {
 					viewManager.show(new DetailView({

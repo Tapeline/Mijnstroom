@@ -4,6 +4,7 @@
       <p style="color:#b71c1c">{{ error }}</p>
     {{/if}}
     <h4 class="mdl-typography--display-1">{{ title }}</h4>
+    <img src="/api/tracks/{{ uid }}/cover.png" style="max-height:300px; max-width:300px;"/>
     <dl>
       <dt>UID</dt><dd><code>{{ uid }}</code></dd>
       <dt>Artist</dt><dd>{{ artist }}</dd>
@@ -11,6 +12,11 @@
       <dt>Genre</dt><dd>{{ genre }}</dd>
       <dt>Year</dt><dd>{{#if year}}{{ year }}{{else}}—{{/if}}</dd>
     </dl>
+    <ul>
+    {{#each formats}}
+      <li><a href="/api/tracks/{{ ../uid }}/formats/{{ this }}">Download {{ this }}</a></li>
+    {{/each}}
+    </ul>
     <a class="mdl-button mdl-js-button mdl-button--raised" href="#/tracks">Back</a>
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent js-delete">
       Delete track

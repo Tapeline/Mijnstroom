@@ -3,6 +3,7 @@ define(function(require) {
 
 	return Backbone.Model.extend({
 		urlRoot: '/api/tracks',
+    idAttribute: 'uid',
 
 		delete: function () {
 			return Backbone.ajax({

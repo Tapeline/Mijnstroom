@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Mijnstroom</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="vendored/mdl/material.min.css"/>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    .login-card {
+      max-width: 400px;
+      width: 90%;
+    }
+    .login-card .mdl-card__title {
+      background: #3f51b5;
+      color: white;
+    }
+    .error-message {
+      color: #d32f2f;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mdl-card mdl-shadow--6dp login-card">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Mijnstroom</h2>
+  </div>
+  <div class="mdl-card__supporting-text">
+    <p>Enter the instance password to continue.</p>
+    <form id="login-form">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+        <input class="mdl-textfield__input" type="password" id="password" name="password" required>
+        <label class="mdl-textfield__label" for="password">Password</label>
+      </div>
+      <div id="error-container" class="error-message" style="display:none"></div>
+    </form>
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <button type="submit" form="login-form" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--raised" id="login-btn">
+      Login
+    </button>
+  </div>
+</div>
+
+<script src="vendored/mdl/material.min.js"></script>
+<script>
+  const form = document.getElementById('login-form');
+  const btn = document.getElementById('login-btn');
+  const errorContainer = document.getElementById('error-container');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('password').value;
+    
+    btn.disabled = true;
+    btn.textContent = 'Logging in...';
+    errorContainer.style.display = 'none';
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        window.location.href = '/';
+      } else {
+        errorContainer.textContent = data.error || 'Login failed';
+        errorContainer.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Login';
+      }
+    } catch (err) {
+      errorContainer.textContent = 'Network error. Please try again.';
+      errorContainer.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Login';
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -6,8 +6,10 @@ from litestar.openapi.plugins import SwaggerRenderPlugin, YamlRenderPlugin
 from mijnstroom.config import Config
 from mijnstroom.errors import AppError, NotFoundError
 from mijnstroom.http import endpoints, frontend
+from mijnstroom.http.auth import auth_router
 from mijnstroom.http.container import AppContainer
-from mijnstroom.http.frontend import frontend_router
+from mijnstroom.http.frontend import frontend_router, serve_login
+from mijnstroom.http.security import AuthMiddleware
 from mijnstroom.media.yt import YT
 from mijnstroom.storage import LockedStorage
 from mijnstroom.usecases.library_search import (
@@ -102,8 +104,13 @@ def create_app(container: AppContainer) -> Litestar:
         },
     )
 
+    middleware = []
+    if container.config.security.enable_auth:
+        middleware.append(AuthMiddleware)
+
     app = Litestar(
-        route_handlers=[frontend_router, api_router],
+        route_handlers=[serve_login, frontend_router, api_router, auth_router],
+        middleware=middleware,
         debug=True,
         exception_handlers={
             AppError: app_error_handler,
