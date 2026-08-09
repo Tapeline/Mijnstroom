@@ -29,7 +29,7 @@ async def login(request: Request, data: LoginRequest) -> Response:
     token = create_session_token(config.security.secret)
     response = Response(
         content={"ok": True, "token": token},
-        headers={"Set-Cookie": f"{SESSION_COOKIE_NAME}={token}; MaxAge={SESSION_MAX_AGE_SECONDS}; Path=/; Secure"}
+        headers={"Set-Cookie": f"{SESSION_COOKIE_NAME}={token}; MaxAge={SESSION_MAX_AGE_SECONDS}; Path=/; Secure"},
         status_code=200,
     )
     return response
