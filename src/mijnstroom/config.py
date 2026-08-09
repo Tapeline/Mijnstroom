@@ -66,8 +66,8 @@ _DEFAULT_CONFIG_PATH: Final = "config.yml"
 def load_config(path: str = _DEFAULT_CONFIG_PATH) -> Config:
     global _loaded_config
     _loaded_config = dature.load(
-        dature.EnvSource(prefix="MS_"),
         dature.Yaml12Source(file=path),
+        dature.EnvSource(prefix="MS_"),
         schema=Config,
     )
     return _loaded_config
