@@ -6,7 +6,7 @@ from litestar.di import NamedDependency
 from litestar.response import File
 
 from mijnstroom.data import Playlist, Track
-from mijnstroom.media.yt import YTVideoDetailed
+from mijnstroom.media.yt import YTVideoDetailed, YTPlaylist
 from mijnstroom.usecases.library_search import (
     DownloadFileFromLibrary, GetPlaylistInLibrary,
     GetTrackFormatsInLibrary, GetTrackInLibrary,
@@ -36,6 +36,13 @@ from mijnstroom.usecases.yt_video_flow import (
     ImportYTVideoSegment,
     PrepareYTVideo,
     PrepareYTVideoRequest,
+)
+from mijnstroom.usecases.yt_playlist_flow import (
+    ImportYTPlaylistFlow,
+    ImportYTPlaylistRequest,
+    ImportYTPlaylistVideoConfig,
+    PrepareYTPlaylist,
+    PrepareYTPlaylistRequest,
 )
 
 
@@ -198,3 +205,39 @@ async def import_yt_video(
         )
     )
     return {"job_uid": import_yt_video.uid}
+
+
+@post("/yt/playlist/prepare")
+async def prepare_yt_playlist(
+    data: PrepareYTPlaylistRequest,
+    prepare_yt_playlist: PrepareYTPlaylist,
+) -> YTPlaylist:
+    return await prepare_yt_playlist(data)
+
+
+@dataclass
+class ImportYTPlaylistBody:
+    url: str
+    override_artist: str | None = None
+    override_album: str | None = None
+    override_year: int | None = None
+    override_genre: str | None = None
+    videos: list[ImportYTPlaylistVideoConfig] | None = None
+
+
+@post("/yt/playlist/import")
+async def import_yt_playlist(
+    data: ImportYTPlaylistBody,
+    import_yt_playlist: ImportYTPlaylistFlow,
+) -> dict:
+    await import_yt_playlist(
+        ImportYTPlaylistRequest(
+            url=data.url,
+            override_artist=data.override_artist,
+            override_album=data.override_album,
+            override_year=data.override_year,
+            override_genre=data.override_genre,
+            videos=data.videos,
+        )
+    )
+    return {"job_uid": import_yt_playlist.uid}

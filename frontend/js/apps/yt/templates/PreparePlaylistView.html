@@ -1,0 +1,18 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <h4 class="mdl-typography--display-1">Import YouTube Playlist</h4>
+    <p class="mdl-typography--body-1">Step 1: paste a YouTube playlist URL.</p>
+    {{#if error}}<p style="color:#b71c1c">{{ error }}</p>{{/if}}
+
+    <form class="js-prepare-form">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+        <input class="mdl-textfield__input" type="url" name="url" id="pl-url" required>
+        <label class="mdl-textfield__label" for="pl-url">YouTube Playlist URL</label>
+      </div>
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+              {{#if loading}}disabled{{/if}}>
+        {{#if loading}}Preparing...{{else}}Prepare{{/if}}
+      </button>
+    </form>
+  </div>
+</div>

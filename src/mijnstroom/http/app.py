@@ -27,6 +27,7 @@ from mijnstroom.usecases.registry import (
     GetJobDetail, PipelineRegistry, SeeRunningJobs,
 )
 from mijnstroom.usecases.yt_video_flow import ImportYTVideoFlow, PrepareYTVideo
+from mijnstroom.usecases.yt_playlist_flow import ImportYTPlaylistFlow, PrepareYTPlaylist
 
 
 def _provide_container(request: Request) -> AppContainer:
@@ -75,6 +76,8 @@ def create_app(container: AppContainer) -> Litestar:
             endpoints.get_job,
             endpoints.prepare_yt_video,
             endpoints.import_yt_video,
+            endpoints.prepare_yt_playlist,
+            endpoints.import_yt_playlist,
             endpoints.get_cover,
             endpoints.get_track_formats,
             endpoints.download_track,
@@ -98,6 +101,8 @@ def create_app(container: AppContainer) -> Litestar:
             "get_job": Provide(GetJobDetail),
             "prepare_yt_video": Provide(PrepareYTVideo),
             "import_yt_video": Provide(ImportYTVideoFlow),
+            "prepare_yt_playlist": Provide(PrepareYTPlaylist),
+            "import_yt_playlist": Provide(ImportYTPlaylistFlow),
             "get_track_formats": Provide(GetTrackFormatsInLibrary),
             "download_track": Provide(DownloadFileFromLibrary),
             "get_cover": Provide(GetCoverInLibrary),
