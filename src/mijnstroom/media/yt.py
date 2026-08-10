@@ -168,14 +168,20 @@ class YT:
 
     def get_playlist_info(self, url: str) -> YTPlaylist | None:
         with yt_dlp.YoutubeDL(
-            dict(
-                quiet=True,
-                no_warnings=True,
-                extract_flat=False,
-                skip_download=True,
-                ignoreerrors=True,
-                cookiefile=self._config.cookie_file
-            )
+            {
+                "quiet": True,
+                "no_warnings": True,
+                "cookiefile": self._config.cookie_file,
+                "check_formats": False,
+                "verbose": True,
+                "format": "bestaudio/best",
+                "js_runtimes": {"node": {"path": "node"}},
+                "extractor_args": {
+                    "youtube": {
+                        "pot_from_cookies": True
+                    }
+                }
+            }
         ) as ydl:
             info = ydl.extract_info(url, download=False)
         if info is None:
