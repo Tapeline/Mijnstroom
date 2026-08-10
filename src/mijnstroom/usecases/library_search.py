@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from mijnstroom.data import Playlist, Track
 from mijnstroom.errors import NotFoundError
 from mijnstroom.storage import LockedStorage
+from pathlib import Path
 
 
 @dataclass

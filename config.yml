@@ -18,6 +18,6 @@ app:
       ext: m4a
 
 security:
-  enable_auth: true
+  enable_auth: false
   secret: change-me
   password: change-me
