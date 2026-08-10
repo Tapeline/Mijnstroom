@@ -4,7 +4,10 @@ from mijnstroom.data import Playlist, Track
 from mijnstroom.errors import NotFoundError
 from mijnstroom.storage import LockedStorage
 from pathlib import Path
+<<<<<<< HEAD
 
+=======
+>>>>>>> f404349ff99aef92348bf7923bb7ebe1e6badf09
 
 @dataclass
 class SearchRequest:
